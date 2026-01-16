@@ -2,7 +2,7 @@
 import React, { useRef, useEffect } from 'react';
 import { 
   Type, ImageIcon, Layout, ListFilter, Eye, 
-  ListChecks, Plus, CheckCircle2, Globe, RotateCw, Lock 
+  ListChecks, Plus, CheckCircle2, Globe, RotateCw, Lock, Info 
 } from 'lucide-react';
 
 // Shared Thumbnail Component
@@ -38,6 +38,41 @@ export const PageThumbnail: React.FC<{
   );
 };
 
+export const MetadataPanel = ({ config, setConfig }: any) => (
+  <div className="space-y-4 text-left">
+    <div className="space-y-2">
+      <label className="text-[10px] font-black uppercase text-noir-text-muted flex items-center gap-2"><Info className="w-3 h-3" /> Document Title</label>
+      <input 
+        type="text" 
+        placeholder="Enter title" 
+        value={config.metaTitle || ''} 
+        onChange={e => setConfig({...config, metaTitle: e.target.value})} 
+        className="w-full bg-white dark:bg-white py-3 px-4 rounded-xl border border-noir-text/10 outline-none font-black text-black placeholder:text-noir-text-muted/50" 
+      />
+    </div>
+    <div className="space-y-2">
+      <label className="text-[10px] font-black uppercase text-noir-text-muted">Author</label>
+      <input 
+        type="text" 
+        placeholder="Enter author name" 
+        value={config.metaAuthor || ''} 
+        onChange={e => setConfig({...config, metaAuthor: e.target.value})} 
+        className="w-full bg-white dark:bg-white py-3 px-4 rounded-xl border border-noir-text/10 outline-none font-black text-black placeholder:text-noir-text-muted/50" 
+      />
+    </div>
+    <div className="space-y-2">
+      <label className="text-[10px] font-black uppercase text-noir-text-muted">Keywords (comma separated)</label>
+      <input 
+        type="text" 
+        placeholder="e.g. report, annual, 2025" 
+        value={config.metaKeywords || ''} 
+        onChange={e => setConfig({...config, metaKeywords: e.target.value})} 
+        className="w-full bg-white dark:bg-white py-3 px-4 rounded-xl border border-noir-text/10 outline-none font-black text-black placeholder:text-noir-text-muted/50" 
+      />
+    </div>
+  </div>
+);
+
 export const WatermarkPanel = ({ config, setConfig }: any) => (
   <div className="space-y-6 text-left">
     <div className="flex gap-4 p-1 bg-white/50 dark:bg-noir-bg-dark/50 rounded-xl">
@@ -47,19 +82,30 @@ export const WatermarkPanel = ({ config, setConfig }: any) => (
     {config.watermarkType === 'text' ? (
       <div className="space-y-2">
         <label className="text-[10px] font-black uppercase text-noir-text-muted">Watermark Text</label>
-        <input type="text" value={config.watermarkText} onChange={e => setConfig({...config, watermarkText: e.target.value})} className="w-full bg-white dark:bg-noir-bg py-3 px-4 rounded-xl border border-noir-text/5 focus:border-at-teal outline-none font-bold" />
+        <input 
+          type="text" 
+          placeholder="e.g. CONFIDENTIAL"
+          value={config.watermarkText} 
+          onChange={e => setConfig({...config, watermarkText: e.target.value})} 
+          className="w-full bg-white dark:bg-white py-3 px-4 rounded-xl border border-noir-text/10 focus:border-at-teal outline-none font-black text-black placeholder:text-noir-text-muted/50" 
+        />
       </div>
     ) : (
       <div className="space-y-2">
         <label className="text-[10px] font-black uppercase text-noir-text-muted">Select Image</label>
-        <input type="file" accept="image/*" onChange={e => {
-          const file = e.target.files?.[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = ev => setConfig({...config, watermarkImage: ev.target?.result});
-            reader.readAsDataURL(file);
-          }
-        }} className="text-xs w-full" />
+        <input 
+          type="file" 
+          accept="image/*" 
+          onChange={e => {
+            const file = e.target.files?.[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = ev => setConfig({...config, watermarkImage: ev.target?.result});
+              reader.readAsDataURL(file);
+            }
+          }} 
+          className="text-xs w-full text-black dark:text-black file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-at-teal/10 file:text-at-teal hover:file:bg-at-teal/20" 
+        />
       </div>
     )}
     <div className="grid grid-cols-2 gap-4">
@@ -83,13 +129,16 @@ export const SplitPanel = ({ config, setConfig, pdfDoc, numPages }: any) => (
         <button onClick={() => setConfig({ ...config, splitMode: 'merged' })} className={`flex-1 py-3 rounded-lg text-[10px] font-black uppercase transition-all ${config.splitMode === 'merged' ? 'bg-at-teal text-white' : 'text-noir-text-muted'}`}>Merge Pages</button>
       </div>
       <div className="space-y-4">
-        <label className="text-[10px] font-black uppercase text-noir-text-muted">Enter Page Numbers</label>
-        <input type="text" placeholder="e.g. 1-5, 10" className="w-full bg-white dark:bg-noir-bg py-3 px-4 rounded-xl border border-noir-text/5 outline-none font-bold" />
-        <p className="text-[10px] text-noir-text-muted italic">You can also click on the pages in the preview.</p>
+        <label className="text-[10px] font-black uppercase text-noir-text-muted">Page Management</label>
+        <p className="text-[10px] text-noir-text-muted italic">Click on the pages in the preview to select/deselect them for the final document.</p>
+        <div className="flex gap-2">
+           <button onClick={() => setConfig({...config, selectedPages: Array.from({length: numPages}, (_,i)=>i+1)})} className="text-[9px] font-black uppercase px-3 py-1 bg-at-teal/10 text-at-teal rounded-md">Select All</button>
+           <button onClick={() => setConfig({...config, selectedPages: []})} className="text-[9px] font-black uppercase px-3 py-1 bg-red-500/10 text-red-500 rounded-md">Clear</button>
+        </div>
       </div>
     </div>
     <div className="space-y-4">
-      <label className="text-[10px] font-black uppercase text-noir-text-muted">Page Preview</label>
+      <label className="text-[10px] font-black uppercase text-noir-text-muted">Page Preview ({config.selectedPages.length} selected)</label>
       <div className="grid grid-cols-3 gap-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar border border-noir-text/5 p-2 rounded-xl">
         {Array.from({ length: numPages }, (_, i) => i + 1).map(pNum => (
           <PageThumbnail key={pNum} pdfDoc={pdfDoc} pageNum={pNum} isSelected={config.selectedPages.includes(pNum)} onToggle={() => {
@@ -105,8 +154,21 @@ export const SplitPanel = ({ config, setConfig, pdfDoc, numPages }: any) => (
 export const SecurityPanel = ({ config, setConfig }: any) => (
   <div className="space-y-4 text-left">
     <label className="text-[10px] font-black uppercase text-noir-text-muted flex items-center gap-2"><Lock className="w-3 h-3" /> Set Password</label>
-    <input type="password" placeholder="New Password" value={config.password} onChange={e => setConfig({...config, password: e.target.value})} className="w-full bg-white dark:bg-noir-bg py-3 px-4 rounded-xl border border-noir-text/5 outline-none font-bold" />
-    <input type="password" placeholder="Confirm Password" value={config.confirmPassword} onChange={e => setConfig({...config, confirmPassword: e.target.value})} className="w-full bg-white dark:bg-noir-bg py-3 px-4 rounded-xl border border-noir-text/5 outline-none font-bold" />
+    <input 
+      type="password" 
+      placeholder="New Password" 
+      value={config.password} 
+      onChange={e => setConfig({...config, password: e.target.value})} 
+      className="w-full bg-white dark:bg-white py-3 px-4 rounded-xl border border-noir-text/10 outline-none font-black text-black placeholder:text-noir-text-muted/50" 
+    />
+    <input 
+      type="password" 
+      placeholder="Confirm Password" 
+      value={config.confirmPassword} 
+      onChange={e => setConfig({...config, confirmPassword: e.target.value})} 
+      className="w-full bg-white dark:bg-white py-3 px-4 rounded-xl border border-noir-text/10 outline-none font-black text-black placeholder:text-noir-text-muted/50" 
+    />
+    <p className="text-[10px] text-at-amber font-bold italic">Remember this password. You will need it to open the PDF later.</p>
   </div>
 );
 
@@ -115,13 +177,13 @@ export const AIConfigPanel = ({ config, setConfig, id }: any) => (
      {id === 'pdf-translate' && (
        <>
          <label className="text-[10px] font-black uppercase text-noir-text-muted flex items-center gap-2"><Globe className="w-3 h-3" /> Select Language</label>
-         <select value={config.targetLang} onChange={e => setConfig({...config, targetLang: e.target.value})} className="w-full bg-white dark:bg-noir-bg py-3 px-4 rounded-xl border border-noir-text/5 font-bold">
-           {['English', 'Spanish', 'French', 'German', 'Japanese', 'Chinese', 'Hindi'].map(l => <option key={l} value={l}>{l}</option>)}
+         <select value={config.targetLang} onChange={e => setConfig({...config, targetLang: e.target.value})} className="w-full bg-white dark:bg-white py-3 px-4 rounded-xl border border-noir-text/10 font-black text-black">
+           {['English', 'Spanish', 'French', 'German', 'Japanese', 'Chinese', 'Hindi', 'Arabic', 'Portuguese', 'Russian'].map(l => <option key={l} value={l}>{l}</option>)}
          </select>
        </>
      )}
      <div className="bg-noir-bg dark:bg-noir-surface-elevated p-4 rounded-xl border border-noir-text/5">
-        <p className="text-[11px] font-medium text-noir-text-muted">Your document is being processed privately by AI. No data is stored or used for training.</p>
+        <p className="text-[11px] font-medium text-noir-text-muted">Your document is being processed privately by Gemini. No data is stored or used for training.</p>
      </div>
   </div>
 );

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Upload, X, File as FileIcon, Loader2, ArrowLeft, Zap, RefreshCw, AlertTriangle, Sparkles, CheckCircle2, Archive, FileDown, Download, ExternalLink, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as pdfjsLib from 'pdfjs-dist';
@@ -8,12 +8,13 @@ import JSZip from 'jszip';
 import { TOOLS } from '../constants';
 import { FileState } from '../types';
 import { runToolProcessor } from '../services/toolProcessors';
-import { WatermarkPanel, SplitPanel, SecurityPanel, AIConfigPanel } from './toolSettings/SettingsPanels';
+import { WatermarkPanel, SplitPanel, SecurityPanel, AIConfigPanel, MetadataPanel } from './toolSettings/SettingsPanels';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://esm.sh/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.mjs`;
 
 export const ToolPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const tool = TOOLS.find(t => t.id === id);
   
   const [files, setFiles] = useState<FileState[]>([]);
@@ -38,7 +39,10 @@ export const ToolPage: React.FC = () => {
     watermarkOpacity: 0.4,
     watermarkRotation: -45,
     watermarkSize: 60,
-    watermarkColor: '#ff0000'
+    watermarkColor: '#ff0000',
+    metaTitle: '',
+    metaAuthor: '',
+    metaKeywords: ''
   });
 
   const clearSession = () => {
@@ -63,7 +67,7 @@ export const ToolPage: React.FC = () => {
         const doc = await pdfjsLib.getDocument(await newFiles[0].file.arrayBuffer()).promise;
         setPdfDoc(doc);
         setNumPages(doc.numPages);
-        setConfig({ ...config, selectedPages: Array.from({length: doc.numPages}, (_,i)=>i+1)});
+        setConfig((prev: any) => ({ ...prev, selectedPages: Array.from({length: doc.numPages}, (_,i)=>i+1)}));
       } catch (err) {
         console.error("PDF load error:", err);
       }
@@ -132,7 +136,12 @@ export const ToolPage: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-16 animate-fade-in-up-soft">
-      <Link to="/" className="inline-flex items-center gap-2 text-noir-text-muted hover:text-at-teal font-bold text-[11px] uppercase tracking-widest mb-12"><ArrowLeft className="w-4 h-4" /> Back to Home</Link>
+      <button 
+        onClick={() => navigate(-1)} 
+        className="inline-flex items-center gap-2 text-noir-text-muted hover:text-at-teal font-bold text-[11px] uppercase tracking-widest mb-12"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back
+      </button>
       <div className="text-center mb-16">
         <div className={`inline-flex p-6 rounded-[2rem] ${tool.color} text-white mb-8 shadow-xl`}>{tool.icon}</div>
         <h1 className="text-5xl font-black text-noir-text dark:text-noir-text-dark mb-4 tracking-tighter">{tool.name}</h1>
@@ -163,13 +172,14 @@ export const ToolPage: React.FC = () => {
                   className="grid lg:grid-cols-3 gap-10"
                 >
                   <div className="lg:col-span-2 space-y-6">
-                    {id === 'split-pdf' && pdfDoc && <SplitPanel config={config} setConfig={setConfig} pdfDoc={pdfDoc} numPages={numPages} />}
+                    {['split-pdf', 'organize-pdf'].includes(id!) && pdfDoc && <SplitPanel config={config} setConfig={setConfig} pdfDoc={pdfDoc} numPages={numPages} />}
                     {id === 'watermark-pdf' && <WatermarkPanel config={config} setConfig={setConfig} />}
                     {id === 'protect-pdf' && <SecurityPanel config={config} setConfig={setConfig} />}
-                    {['ai-summarize', 'pdf-translate', 'ai-ocr'].includes(id!) && <AIConfigPanel config={config} setConfig={setConfig} id={id} />}
+                    {id === 'metadata-editor' && <MetadataPanel config={config} setConfig={setConfig} />}
+                    {['ai-summarize', 'pdf-translate'].includes(id!) && <AIConfigPanel config={config} setConfig={setConfig} id={id} />}
                     
                     {/* Default info for tools without complex settings */}
-                    {!['split-pdf', 'watermark-pdf', 'protect-pdf', 'ai-summarize', 'pdf-translate', 'ai-ocr'].includes(id!) && (
+                    {!['split-pdf', 'organize-pdf', 'watermark-pdf', 'protect-pdf', 'ai-summarize', 'pdf-translate', 'metadata-editor'].includes(id!) && (
                        <div className="p-8 bg-noir-bg dark:bg-noir-surface-elevated rounded-3xl border border-noir-text/5 text-left">
                          <h4 className="font-black text-[10px] uppercase tracking-widest text-at-teal mb-4">Ready for Conversion</h4>
                          <p className="text-sm text-noir-text-muted dark:text-noir-text-darkMuted font-medium">Click the convert button below to start the high-speed processing node.</p>
@@ -184,7 +194,7 @@ export const ToolPage: React.FC = () => {
                         <div key={f.id} className="flex items-center gap-3 p-3 bg-white dark:bg-noir-bg-dark rounded-xl border border-noir-text/5">
                           <FileIcon className="w-4 h-4 text-at-teal shrink-0" />
                           <div className="flex-1 min-w-0">
-                            <p className="text-[11px] font-bold truncate">{f.file.name}</p>
+                            <p className="text-[11px] font-bold truncate text-black dark:text-white">{f.file.name}</p>
                             <p className="text-[9px] text-noir-text-muted">{(f.file.size / 1024).toFixed(1)} KB</p>
                           </div>
                           <div className="flex items-center gap-2">
@@ -227,39 +237,6 @@ export const ToolPage: React.FC = () => {
                      >
                        <Download className="w-5 h-5" /> Download Result
                      </button>
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {splitResult ? (
-                       splitResult.pages.map((p: any) => (
-                         <div key={p.pageNum} className="bg-white dark:bg-noir-surface-elevated p-6 rounded-3xl border border-noir-text/5 flex items-center justify-between group">
-                            <div className="flex items-center gap-4">
-                              <div className="bg-at-teal/10 p-3 rounded-xl"><FileIcon className="w-5 h-5 text-at-teal" /></div>
-                              <div>
-                                <p className="text-sm font-bold">Page {p.pageNum}</p>
-                                <p className="text-[10px] text-noir-text-muted uppercase font-black">Extracted PDF</p>
-                              </div>
-                            </div>
-                            <button onClick={() => downloadFile(p.url, `page_${p.pageNum}.pdf`)} className="p-2 hover:bg-at-teal/10 text-at-teal rounded-lg transition-colors"><Download className="w-4 h-4" /></button>
-                         </div>
-                       ))
-                    ) : (
-                      batchResult.map((res: any) => (
-                        <div key={res.id} className="bg-white dark:bg-noir-surface-elevated p-6 rounded-3xl border border-noir-text/5 flex items-center justify-between group">
-                           <div className="flex items-center gap-4">
-                             <div className="bg-at-teal/10 p-3 rounded-xl"><FileIcon className="w-5 h-5 text-at-teal" /></div>
-                             <div className="min-w-0 flex-1">
-                               <p className="text-sm font-bold truncate pr-4">{res.name}</p>
-                               <p className="text-[10px] text-noir-text-muted uppercase font-black">Processed Output</p>
-                             </div>
-                           </div>
-                           <div className="flex gap-2">
-                             {res.url && <button onClick={() => window.open(res.url, '_blank')} className="p-2 hover:bg-noir-bg dark:hover:bg-noir-bg-dark text-noir-text-muted rounded-lg transition-colors"><ExternalLink className="w-4 h-4" /></button>}
-                             <button onClick={() => downloadFile(res.url, res.name)} className="p-2 hover:bg-at-teal/10 text-at-teal rounded-lg transition-colors"><Download className="w-4 h-4" /></button>
-                           </div>
-                        </div>
-                      ))
-                    )}
                   </div>
                 </motion.div>
               )}

@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export interface Tool {
@@ -27,14 +28,12 @@ export type ToolID =
   | 'split-pdf' 
   | 'compress-pdf' 
   | 'ai-summarize' 
-  | 'ai-ocr' 
   | 'pdf-translate'
   | 'protect-pdf'
   | 'rotate-pdf'
   | 'pdf-to-jpg'
   | 'jpg-to-pdf'
   | 'pdf-to-ppt'
-  | 'barcode-scan'
   | 'pdf-to-excel'
   | 'pdf-to-json'
   | 'watermark-pdf';

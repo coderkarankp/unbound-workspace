@@ -82,17 +82,14 @@ const HomePage: React.FC = () => {
           </div>
           <h1 className="text-6xl md:text-8xl font-black text-noir-text dark:text-noir-text-dark mb-8 tracking-tighter leading-[0.9] animate-fade-in-up-soft delay-100 opacity-0">
             Privacy First.<br />
-            <span className="text-at-teal dark:text-at-teal-dark inline-block">Simple</span> Documents.
+            <span className="text-at-teal dark:text-at-teal-dark inline-block">Unbound</span> Documents.
           </h1>
           <p className="text-xl text-noir-text-muted dark:text-noir-text-darkMuted max-w-2xl mx-auto mb-14 font-medium leading-relaxed animate-fade-in-up-soft delay-200 opacity-0">
             Professional document tools that respect your privacy. No accounts, no logs, and no storage. Your files stay yours.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 animate-fade-in-up-soft delay-300 opacity-0">
-            <a href="#tools" className="bg-at-teal dark:bg-at-teal-dark text-white dark:text-noir-bg-dark px-10 py-5 rounded-2xl font-bold text-lg hover:brightness-110 transition-soft shadow-lg active:opacity-90 noir-glow-teal">
+            <Link to="/capabilities" className="bg-at-teal dark:bg-at-teal-dark text-white dark:text-noir-bg-dark px-12 py-5 rounded-2xl font-bold text-lg hover:brightness-110 transition-soft shadow-lg active:opacity-90 noir-glow-teal">
               Explore Tools
-            </a>
-            <Link to="/capabilities" className="bg-noir-surface/50 dark:bg-noir-surface-dark backdrop-blur-sm text-noir-text dark:text-noir-text-dark border border-noir-text/10 dark:border-noir-surface-elevated px-10 py-5 rounded-2xl font-bold text-lg hover:bg-noir-surface transition-soft shadow-sm">
-              View All 50+ Tools
             </Link>
           </div>
           <div className="mt-24 flex flex-wrap justify-center gap-12 opacity-30 dark:opacity-20 animate-fade-in-up-soft delay-500 opacity-0">

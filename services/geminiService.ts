@@ -10,9 +10,7 @@ export const summarizeDocument = async (text: string) => {
     contents: `Please provide a high-level professional summary of the following document. 
     Focus on key achievements, core competencies, and professional narrative. 
     Use a clean, executive style with bullet points for key takeaways. \n\n${text}`,
-    config: {
-      temperature: 0.7,
-    }
+    config: { temperature: 0.7 }
   });
   return response.text;
 };
@@ -25,6 +23,61 @@ export const performOCR = async (base64Data: string, mimeType: string = 'image/j
       parts: [
         { inlineData: { data: base64Data, mimeType: mimeType } },
         { text: "Extract all text from this document. CRITICAL: Preserve the visual hierarchy. Maintain all bullet points and list structures exactly as they appear." }
+      ]
+    }
+  });
+  return response.text;
+};
+
+export const extractPalette = async (base64Data: string, mimeType: string) => {
+  const ai = getAI();
+  const response = await ai.models.generateContent({
+    model: 'gemini-3-flash-preview',
+    contents: {
+      parts: [
+        { inlineData: { data: base64Data, mimeType: mimeType } },
+        { text: "Analyze the visual elements, images, and branding of this document. Return a JSON object containing the primary, secondary, and accent hex codes that represent its color palette." }
+      ]
+    },
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          primary: { type: Type.STRING },
+          secondary: { type: Type.STRING },
+          accent: { type: Type.STRING },
+          neutral: { type: Type.STRING }
+        }
+      }
+    }
+  });
+  return response.text;
+};
+
+export const compareDocuments = async (file1Base64: string, file2Base64: string) => {
+  const ai = getAI();
+  const response = await ai.models.generateContent({
+    model: 'gemini-3-pro-preview',
+    contents: {
+      parts: [
+        { inlineData: { data: file1Base64, mimeType: 'application/pdf' } },
+        { inlineData: { data: file2Base64, mimeType: 'application/pdf' } },
+        { text: "Compare these two documents. Provide a summary of semantic differences. Focus on changes in text, clauses, or structure. Ignore minor formatting shifts." }
+      ]
+    }
+  });
+  return response.text;
+};
+
+export const convertToPDFContent = async (base64Data: string, mimeType: string) => {
+  const ai = getAI();
+  const response = await ai.models.generateContent({
+    model: 'gemini-3-pro-preview',
+    contents: {
+      parts: [
+        { inlineData: { data: base64Data, mimeType: mimeType } },
+        { text: "Read this file (Email/EPUB) and reconstruct it into a highly professional document format (Markdown/HTML). Ensure all metadata (From, To, Date for emails) or chapters (for EPUB) are preserved in a clean hierarchy." }
       ]
     }
   });
@@ -77,20 +130,6 @@ export const extractJSON = async (base64Data: string, mimeType: string = 'applic
           }
         }
       }
-    }
-  });
-  return response.text;
-};
-
-export const scanBarcodes = async (base64Data: string, mimeType: string = 'image/jpeg') => {
-  const ai = getAI();
-  const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
-    contents: {
-      parts: [
-        { inlineData: { data: base64Data, mimeType: mimeType } },
-        { text: "Scan this document and find all barcodes, QR codes, or data matrices. For each one detected, identify: 1. Symbology/Type, 2. Decoded Value. Format as a markdown list." }
-      ]
     }
   });
   return response.text;
