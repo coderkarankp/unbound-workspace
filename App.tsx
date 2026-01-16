@@ -6,7 +6,70 @@ import { ToolCard } from './components/ToolCard';
 import { ToolPage } from './components/ToolPage';
 import { AllCapabilities } from './components/AllCapabilities';
 import { TOOLS } from './constants';
-import { Sparkles, ArrowRight, CheckCircle2, Shield, Fingerprint, MousePointer2, ShieldCheck } from 'lucide-react';
+import { Sparkles, ArrowRight, CheckCircle2, Shield, Fingerprint, MousePointer2, ShieldCheck, Cpu, Lock, Zap } from 'lucide-react';
+
+const AboutUsPage: React.FC = () => (
+  <div className="max-w-4xl mx-auto px-4 py-24 animate-fade-in-up-soft">
+    <h1 className="text-5xl font-black text-noir-text dark:text-noir-text-dark mb-8 tracking-tighter">About Unbound</h1>
+    <div className="space-y-8 text-lg text-noir-text-muted dark:text-noir-text-darkMuted leading-relaxed font-medium">
+      <p>
+        Unbound Workspace was built on a simple premise: professional document tools shouldn't come at the cost of your privacy.
+      </p>
+      <p>
+        Most online PDF editors require you to upload files to their servers, where they might stay for hours or even days. We took a different approach. Our platform is designed as a "processing node" — a stateless environment where your files are handled in real-time and immediately purged.
+      </p>
+      <div className="grid md:grid-cols-3 gap-8 pt-8">
+        <div className="p-8 bg-noir-surface dark:bg-noir-surface-dark rounded-3xl border border-noir-text/5">
+          <Zap className="w-8 h-8 text-at-teal mb-4" />
+          <h3 className="font-bold text-noir-text dark:text-noir-text-dark mb-2">Instant</h3>
+          <p className="text-sm">Real-time processing without queues.</p>
+        </div>
+        <div className="p-8 bg-noir-surface dark:bg-noir-surface-dark rounded-3xl border border-noir-text/5">
+          <ShieldCheck className="w-8 h-8 text-at-teal mb-4" />
+          <h3 className="font-bold text-noir-text dark:text-noir-text-dark mb-2">Private</h3>
+          <p className="text-sm">Zero storage architecture by design.</p>
+        </div>
+        <div className="p-8 bg-noir-surface dark:bg-noir-surface-dark rounded-3xl border border-noir-text/5">
+          <Cpu className="w-8 h-8 text-at-teal mb-4" />
+          <h3 className="font-bold text-noir-text dark:text-noir-text-dark mb-2">Smart</h3>
+          <p className="text-sm">AI-powered tools for modern workflows.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const PrivacyPolicyPage: React.FC = () => (
+  <div className="max-w-4xl mx-auto px-4 py-24 animate-fade-in-up-soft">
+    <h1 className="text-5xl font-black text-noir-text dark:text-noir-text-dark mb-8 tracking-tighter">Privacy Policy</h1>
+    <div className="space-y-8 text-lg text-noir-text-muted dark:text-noir-text-darkMuted leading-relaxed font-medium">
+      <div className="p-10 bg-at-teal/5 border border-at-teal/20 rounded-[2.5rem]">
+        <h2 className="text-2xl font-black text-at-teal mb-4">Our Core Commitment</h2>
+        <p className="text-noir-text dark:text-noir-text-dark">
+          We do not store any data, and we process all requests instantly. Your documents exist on our platform only for the duration of the processing cycle.
+        </p>
+      </div>
+      <section className="space-y-4">
+        <h3 className="text-xl font-bold text-noir-text dark:text-noir-text-dark">Stateless Processing</h3>
+        <p>
+          Unbound Workspace operates on a stateless architecture. This means that as soon as your conversion or edit is complete and you download the file, the data is wiped from our active memory. We do not maintain databases of user files.
+        </p>
+      </section>
+      <section className="space-y-4">
+        <h3 className="text-xl font-bold text-noir-text dark:text-noir-text-dark">No Accounts, No Tracking</h3>
+        <p>
+          We don't require accounts to use our tools. By removing the login requirement, we ensure that your document processing history is never tied to a personal identity.
+        </p>
+      </section>
+      <section className="space-y-4">
+        <h3 className="text-xl font-bold text-noir-text dark:text-noir-text-dark">AI Privacy</h3>
+        <p>
+          When using our AI-powered features (like Summarization or OCR), your data is sent via encrypted channels to our processing engine and is never used to train global AI models.
+        </p>
+      </section>
+    </div>
+  </div>
+);
 
 const HomePage: React.FC = () => {
   return (
@@ -15,26 +78,26 @@ const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <div className="inline-flex items-center gap-2 bg-at-amber/10 dark:bg-at-amber-dark/20 text-at-amber dark:text-at-amber-dark px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-10 animate-fade-in-up-soft">
             <ShieldCheck className="w-4 h-4" />
-            Zero-Storage Workspace
+            Secure & Private
           </div>
           <h1 className="text-6xl md:text-8xl font-black text-noir-text dark:text-noir-text-dark mb-8 tracking-tighter leading-[0.9] animate-fade-in-up-soft delay-100 opacity-0">
             Privacy First.<br />
-            <span className="text-at-teal dark:text-at-teal-dark inline-block">Unbound</span> Documents.
+            <span className="text-at-teal dark:text-at-teal-dark inline-block">Simple</span> Documents.
           </h1>
           <p className="text-xl text-noir-text-muted dark:text-noir-text-darkMuted max-w-2xl mx-auto mb-14 font-medium leading-relaxed animate-fade-in-up-soft delay-200 opacity-0">
-            Professional document tools with absolute statelessness. No accounts, no logs, no databases. Your files never leave your sight.
+            Professional document tools that respect your privacy. No accounts, no logs, and no storage. Your files stay yours.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 animate-fade-in-up-soft delay-300 opacity-0">
             <a href="#tools" className="bg-at-teal dark:bg-at-teal-dark text-white dark:text-noir-bg-dark px-10 py-5 rounded-2xl font-bold text-lg hover:brightness-110 transition-soft shadow-lg active:opacity-90 noir-glow-teal">
-              Launch Workspace
+              Explore Tools
             </a>
             <Link to="/capabilities" className="bg-noir-surface/50 dark:bg-noir-surface-dark backdrop-blur-sm text-noir-text dark:text-noir-text-dark border border-noir-text/10 dark:border-noir-surface-elevated px-10 py-5 rounded-2xl font-bold text-lg hover:bg-noir-surface transition-soft shadow-sm">
-              All 50+ Tools
+              View All 50+ Tools
             </Link>
           </div>
           <div className="mt-24 flex flex-wrap justify-center gap-12 opacity-30 dark:opacity-20 animate-fade-in-up-soft delay-500 opacity-0">
-            <div className="flex items-center gap-2 font-bold text-noir-text dark:text-noir-text-dark"><Shield className="w-5 h-5" /> NO DATABASE</div>
-            <div className="flex items-center gap-2 font-bold text-noir-text dark:text-noir-text-dark"><Fingerprint className="w-5 h-5" /> VOLATILE PROCESSING</div>
+            <div className="flex items-center gap-2 font-bold text-noir-text dark:text-noir-text-dark"><Shield className="w-5 h-5" /> NO STORAGE</div>
+            <div className="flex items-center gap-2 font-bold text-noir-text dark:text-noir-text-dark"><Fingerprint className="w-5 h-5" /> FAST PROCESSING</div>
             <div className="flex items-center gap-2 font-bold text-noir-text dark:text-noir-text-dark"><MousePointer2 className="w-5 h-5" /> NO ACCOUNTS</div>
           </div>
         </div>
@@ -48,7 +111,7 @@ const HomePage: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 animate-fade-in-up-soft">
           <div className="max-w-xl">
             <h2 className="text-4xl font-bold text-noir-text dark:text-noir-text-dark mb-4 tracking-tight">The Toolkit</h2>
-            <p className="text-lg text-noir-text-muted dark:text-noir-text-darkMuted font-medium leading-relaxed">Stateless processing nodes for all your document needs.</p>
+            <p className="text-lg text-noir-text-muted dark:text-noir-text-darkMuted font-medium leading-relaxed">Fast and secure tools for all your document needs.</p>
           </div>
           <Link to="/capabilities" className="flex items-center gap-2 text-at-teal dark:text-at-teal-dark font-black text-[11px] uppercase tracking-widest hover:translate-x-1 transition-soft group">
             Explore All Tools <ArrowRight className="w-4 h-4" />
@@ -68,14 +131,14 @@ const HomePage: React.FC = () => {
           <div className="grid md:grid-cols-2 gap-0 relative z-10">
             <div className="p-16 lg:p-24 flex flex-col justify-center">
               <div className="bg-at-teal/20 text-at-teal-dark dark:text-at-teal-dark px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-8 w-fit">
-                Stateless Intelligence
+                Smart & Secure
               </div>
-              <h2 className="text-4xl lg:text-5xl font-bold text-white dark:text-noir-text-dark mb-8 tracking-tight leading-tight">Ephemeral documents.<br />Permanent privacy.</h2>
+              <h2 className="text-4xl lg:text-5xl font-bold text-white dark:text-noir-text-dark mb-8 tracking-tight leading-tight">Instant processing.<br />Permanent privacy.</h2>
               <p className="text-noir-bg/60 dark:text-noir-text-darkMuted text-lg mb-10 leading-relaxed font-medium">
-                Our AI processing is completely volatile. Files are uploaded into RAM, processed by our LLM nodes, and the connection is closed instantly after your download.
+                Our processing is completely private. Files are handled in temporary memory and are deleted immediately after you download your results.
               </p>
               <div className="space-y-6">
-                {["No Storage Backend", "RAM-Only Processing", "Instant Node Wipe", "Encrypted Tunneling"].map((item, i) => (
+                {["No Data Stored", "Secure Processing", "Auto-Delete on Close", "Private Connection"].map((item, i) => (
                   <div key={i} className="flex items-center gap-4 text-white/90 dark:text-noir-text-dark font-semibold transition-soft">
                     <div className="bg-at-teal dark:bg-at-teal-dark p-1.5 rounded-lg shadow-lg noir-glow-teal">
                       <CheckCircle2 className="w-4 h-4 text-white dark:text-noir-bg-dark" />
@@ -86,7 +149,7 @@ const HomePage: React.FC = () => {
               </div>
             </div>
             <div className="relative min-h-[500px] overflow-hidden opacity-30">
-              <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&q=80&w=1000" alt="Data Security" className="absolute inset-0 w-full h-full object-cover grayscale mix-blend-overlay group-hover:scale-105 transition-soft duration-1000" />
+              <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&q=80&w=1000" alt="Security" className="absolute inset-0 w-full h-full object-cover grayscale mix-blend-overlay group-hover:scale-105 transition-soft duration-1000" />
               <div className="absolute inset-0 bg-gradient-to-l from-transparent to-noir-text dark:to-noir-surface-elevated" />
             </div>
           </div>
@@ -104,6 +167,8 @@ const AnimatedRoutes: React.FC = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/tool/:id" element={<ToolPage />} />
         <Route path="/capabilities" element={<AllCapabilities />} />
+        <Route path="/about" element={<AboutUsPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
       </Routes>
     </div>
   );

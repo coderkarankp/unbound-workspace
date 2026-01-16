@@ -22,6 +22,11 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const menuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
+  // Handle scroll-to-top on route change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [location.pathname]);
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     const handleClickOutside = (e: MouseEvent) => {
@@ -142,7 +147,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             <div className="flex items-center gap-3">
               <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-at-teal/5 dark:bg-at-teal-dark/10 rounded-full border border-at-teal/10 dark:border-at-teal-dark/20">
                 <ShieldCheck className="w-3.5 h-3.5 text-at-teal dark:text-at-teal-dark" />
-                <span className="text-[9px] font-black uppercase tracking-widest text-at-teal dark:text-at-teal-dark">Stateless Workspace</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-at-teal dark:text-at-teal-dark">Private Workspace</span>
               </div>
               <button 
                 onClick={toggleTheme}
@@ -162,39 +167,36 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       <main className="flex-grow">{children}</main>
       <footer className="bg-noir-surface dark:bg-noir-surface-dark border-t border-noir-bg dark:border-noir-surface-elevated pt-20 pb-12 transition-soft">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-16 mb-20">
-            <div className="col-span-2">
+          <div className="flex flex-col md:flex-row justify-between gap-16 mb-20">
+            <div className="max-w-md">
               <Link to="/" className="flex items-center gap-3 mb-8">
                 <div className="bg-at-teal dark:bg-at-teal-dark p-1.5 rounded-lg noir-glow-teal"><Layers className="text-white dark:text-noir-bg-dark w-5 h-5" /></div>
                 <span className="text-2xl font-black text-noir-text dark:text-noir-text-dark">Unbound</span>
               </Link>
-              <p className="text-noir-text-muted dark:text-noir-text-darkMuted text-[14px] leading-relaxed max-w-xs mb-10 font-medium">
-                The intelligent, stateless workspace for document flow. Files are processed in volatile memory and never stored.
+              <p className="text-noir-text-muted dark:text-noir-text-darkMuted text-[14px] leading-relaxed mb-10 font-medium">
+                Simple, secure document tools. Your files are processed instantly and never saved.
               </p>
               <div className="flex gap-4">
                  <div className="flex items-center gap-2 px-4 py-2 bg-noir-bg dark:bg-noir-surface-elevated rounded-xl border border-noir-bg dark:border-noir-surface-elevated">
                     <Cpu className="w-4 h-4 text-at-amber dark:text-at-amber-dark" />
-                    <span className="text-[10px] font-black uppercase tracking-widest dark:text-noir-text-dark">Database-Free</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest dark:text-noir-text-dark">Privacy-Focused</span>
                  </div>
               </div>
             </div>
-            {['Flows', 'Privacy', 'Legal'].map((section, idx) => (
-              <div key={idx}>
-                <h4 className="font-black text-[11px] uppercase tracking-widest text-noir-text dark:text-noir-text-dark mb-8">{section}</h4>
-                <ul className="space-y-4 text-[13px] text-noir-text-muted dark:text-noir-text-darkMuted font-semibold">
-                  <li><Link to="/capabilities" className="hover:text-at-teal dark:hover:text-at-teal-dark transition-soft">All Tools</Link></li>
-                  <li><a href="#" className="hover:text-at-teal dark:hover:text-at-teal-dark transition-soft">Zero-Log Policy</a></li>
-                  <li><a href="#" className="hover:text-at-teal dark:hover:text-at-teal-dark transition-soft">Volatile Memory</a></li>
-                </ul>
-              </div>
-            ))}
+            <div className="flex flex-col gap-4 min-w-[200px]">
+              <ul className="space-y-4 text-[13px] text-noir-text-muted dark:text-noir-text-darkMuted font-semibold pt-4">
+                <li><Link to="/capabilities" className="hover:text-at-teal dark:hover:text-at-teal-dark transition-soft">All Tools</Link></li>
+                <li><Link to="/about" className="hover:text-at-teal dark:hover:text-at-teal-dark transition-soft">About Us</Link></li>
+                <li><Link to="/privacy" className="hover:text-at-teal dark:hover:text-at-teal-dark transition-soft">Privacy Policy</Link></li>
+              </ul>
+            </div>
           </div>
           <div className="pt-12 border-t border-noir-bg dark:border-noir-surface-elevated flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-1.5 text-[11px] font-black text-noir-text-muted/40 dark:text-noir-text-darkDim uppercase tracking-[0.2em]">
-              Stateless Architecture by Unbound Tech
+              Safe & Private Processing
             </div>
             <div className="text-noir-text-muted/30 dark:text-noir-text-darkDim text-[10px] font-bold uppercase tracking-wider">
-              © 2025 Unbound Workspace. Private & Stateless.
+              © 2025 Unbound. All rights reserved.
             </div>
           </div>
         </div>
