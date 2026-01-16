@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unbound Workspace - Intelligent Document Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+          darkMode: 'class',
+          theme: {
+            extend: {
+              colors: {
+                noir: {
+                  bg: { DEFAULT: '#F6FAF9', dark: '#0B1413' },
+                  surface: { DEFAULT: '#FFFFFF', dark: '#142423', elevated: '#1B2F2D' },
+                  text: { DEFAULT: '#102726', muted: '#5F7F7C', dim: '#8FA6A3', dark: '#E6F2F1', darkMuted: '#A7C2BF', darkDim: '#7C9A97' }
+                },
+                at: {
+                  teal: {
+                    DEFAULT: '#3FB7A6',
+                    hover: '#2EA091',
+                    soft: '#DFF3EF',
+                    dark: '#55D6C2',
+                    darkHover: '#6DE6D2'
+                  },
+                  amber: {
+                    DEFAULT: '#F59E4C',
+                    hover: '#E38A32',
+                    soft: '#FFF1E3',
+                    dark: '#FFAE5D',
+                    darkHover: '#FFC07D'
+                  }
+                }
+              },
+              animation: {
+                'gradient': 'gradient 10s linear infinite',
+                'pulse-gentle': 'pulse-gentle 4s ease-in-out infinite',
+              },
+              keyframes: {
+                gradient: {
+                  '0%, 100%': { 'background-size': '200% 200%', 'background-position': 'left center' },
+                  '50%': { 'background-size': '200% 200%', 'background-position': 'right center' },
+                },
+                'pulse-gentle': {
+                  '0%, 100%': { opacity: '0.1', transform: 'scale(1)' },
+                  '50%': { opacity: '0.15', transform: 'scale(1.05)' },
+                }
+              }
+            },
+          },
+        }
+
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F6FAF9;
+            color: #102726;
+            overflow-x: hidden;
+            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .dark body {
+            background-color: #0B1413;
+            color: #E6F2F1;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F6FAF9; }
+        .dark ::-webkit-scrollbar-track { background: #0B1413; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #1B2F2D; }
+        ::-webkit-scrollbar-thumb:hover { background: #3FB7A6; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #55D6C2; }
+
+        .animate-fade-in-up-soft { animation: fade-in-up-soft 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        
+        @keyframes fade-in-up-soft {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes dropdown-fade {
+          from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+          to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .page-flow-in {
+          animation: fade-in-up-soft 0.42s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          will-change: transform, opacity;
+        }
+
+        * { transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform; transition-duration: 300ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        .noir-glow-teal { box-shadow: 0 0 15px rgba(85,214,194,0.18); }
+        .noir-glow-amber { box-shadow: 0 0 15px rgba(255,174,93,0.16); }
+
+        @media (prefers-reduced-motion: reduce) {
+          * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.12.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "framer-motion": "https://esm.sh/framer-motion@^11.11.17",
+    "pdfjs-dist": "https://esm.sh/pdfjs-dist@4.10.38",
+    "pdf-lib": "https://esm.sh/pdf-lib@^1.17.1",
+    "jszip": "https://esm.sh/jszip@^3.10.1",
+    "docx": "https://esm.sh/docx@^9.1.0",
+    "pptxgenjs": "https://esm.sh/pptxgenjs@3.12.0"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>
