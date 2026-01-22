@@ -1,28 +1,22 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Layers, Heart, Menu, X, Zap, ChevronDown, 
-  FileText, Files, Scissors, RotateCw, Lock, ScanText, 
-  FileUp, FileImage, Languages, LayoutGrid, Shield,
-  Monitor, BrainCircuit, Repeat, Unlock, ShieldAlert, PenTool,
-  Sun, Moon, ShieldCheck, Cpu
+  Layers, Menu, X, ChevronDown, 
+  FileImage, Sun, Moon, ShieldCheck, Cpu
 } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState<'convert' | 'all' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window !== 'undefined') {
-      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-    }
-    return 'light';
-  });
+  const { mode, toggleTheme } = useTheme();
+  
   const menuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
-  // Handle scroll-to-top on route change
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [location.pathname]);
@@ -47,27 +41,15 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
-
   const DropdownItem = ({ to, label, icon: Icon }: { to: string, label: string, icon: any }) => (
     <Link 
       to={to} 
-      className="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-noir-bg dark:hover:bg-noir-surface-elevated transition-soft group/item"
+      className="flex items-center gap-4 px-5 py-4 rounded-2xl hover:bg-theme-primarySoft transition-all group/item anime-card-hover"
     >
-      <div className="text-noir-text-muted dark:text-noir-text-darkMuted group-hover/item:text-at-teal dark:group-hover/item:text-at-teal-dark group-hover/item:translate-x-0.5 transition-soft">
-        <Icon className="w-5 h-5 stroke-[1.5]" />
+      <div className="text-theme-muted group-hover/item:text-theme-primary group-hover/item:scale-110 transition-all">
+        <Icon className="w-6 h-6 stroke-[1.5]" />
       </div>
-      <span className="text-[13.5px] font-bold text-noir-text dark:text-noir-text-dark leading-tight">{label}</span>
+      <span className="text-[14px] font-black text-theme-text leading-tight">{label}</span>
     </Link>
   );
 
@@ -75,36 +57,43 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     const content = (
       <button
         onClick={onClick}
-        className={`relative flex items-center gap-1.5 px-3 py-2 text-[13px] font-black uppercase tracking-wider transition-soft group ${
-          isActive ? 'text-at-teal dark:text-at-teal-dark' : 'text-noir-text dark:text-noir-text-dark hover:text-at-teal dark:hover:text-at-teal-dark'
+        className={`relative flex items-center gap-2 px-4 py-2.5 text-[12px] font-black uppercase tracking-[0.2em] transition-all group ${
+          isActive ? 'text-theme-primary' : 'text-theme-text hover:text-theme-primary'
         }`}
       >
         {label}
-        {hasChevron && <ChevronDown className={`w-3.5 h-3.5 transition-soft ${isActive ? 'rotate-180' : ''}`} />}
-        <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[1.5px] bg-at-teal dark:bg-at-teal-dark transition-soft ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+        {hasChevron && <ChevronDown className={`w-4 h-4 transition-transform duration-500 ${isActive ? 'rotate-180' : ''}`} />}
+        <motion.span 
+          initial={false}
+          animate={{ width: isActive ? '100%' : '0%' }}
+          className="absolute bottom-0 left-0 h-[3px] bg-theme-primary rounded-full" 
+        />
+        {!isActive && <span className="absolute bottom-0 left-0 h-[3px] bg-theme-primary/20 w-0 group-hover:w-full transition-all rounded-full" />}
       </button>
     );
     return to ? <Link to={to}>{content}</Link> : content;
   };
 
   return (
-    <div className="min-h-screen flex flex-col selection:bg-at-teal selection:text-white dark:bg-noir-bg-dark">
+    <div className="min-h-screen flex flex-col selection:bg-theme-primary selection:text-white bg-theme-bg font-sans">
       <header 
         ref={menuRef}
-        className={`fixed top-0 left-0 right-0 z-[100] bg-noir-bg dark:bg-noir-bg-dark transition-soft ${
-          scrolled ? 'shadow-[0_8px_24px_rgba(0,0,0,0.05)] dark:border-b dark:border-noir-surface-elevated py-2' : 'py-4'
+        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
+          scrolled 
+          ? 'bg-theme-bg/90 backdrop-blur-xl border-b border-theme-border py-3' 
+          : 'bg-transparent py-6'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2.5 group shrink-0 active:opacity-80 transition-soft">
-              <div className="bg-noir-text dark:bg-at-teal-dark p-2 rounded-xl group-hover:rotate-3 transition-soft noir-glow-teal">
-                <Layers className="text-white dark:text-noir-bg-dark w-5 h-5" />
+            <Link to="/" className="flex items-center gap-3 group shrink-0 active:scale-95 transition-all">
+              <div className="bg-theme-primary p-2.5 rounded-2xl group-hover:rotate-12 transition-all noir-glow-teal">
+                <Layers className="text-theme-bg dark:text-theme-bg w-6 h-6" />
               </div>
-              <span className="text-xl font-black text-noir-text dark:text-noir-text-dark tracking-tight">Unbound</span>
+              <span className="text-2xl font-black text-theme-text tracking-tighter">Unbound</span>
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-4">
+            <nav className="hidden lg:flex items-center gap-6">
               <NavButton label="MERGE" to="/tool/merge-pdf" />
               <NavButton label="SPLIT" to="/tool/split-pdf" />
               <NavButton label="COMPRESS" to="/tool/compress-pdf" />
@@ -118,85 +107,78 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                     setActiveMenu(activeMenu === 'convert' ? null : 'convert');
                   }} 
                 />
-                {activeMenu === 'convert' && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[520px] bg-noir-surface dark:bg-noir-surface-dark border border-noir-bg dark:border-noir-surface-elevated shadow-xl rounded-[14px] p-6 grid grid-cols-2 gap-8 animate-[dropdown-fade_300ms_ease-out] z-[110]">
-                    <div>
-                      <div className="text-[10px] font-black text-at-teal dark:text-at-teal-dark uppercase tracking-[0.2em] mb-4 pl-4">Into PDF</div>
-                      <div className="space-y-0.5">
-                        <DropdownItem to="/tool/word-to-pdf" label="Word to PDF" icon={FileUp} />
-                        <DropdownItem to="/tool/excel-to-pdf" label="Excel to PDF" icon={LayoutGrid} />
-                        <DropdownItem to="/tool/ppt-to-pdf" label="PPT to PDF" icon={Monitor} />
+                <AnimatePresence>
+                  {activeMenu === 'convert' && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-6 w-[320px] glass-panel border border-theme-border shadow-xl rounded-[2.5rem] p-8 z-[110]"
+                    >
+                      <div className="space-y-1">
+                        <div className="text-[11px] font-black text-theme-primary uppercase tracking-[0.3em] mb-4 pl-5">Image Processing</div>
                         <DropdownItem to="/tool/jpg-to-pdf" label="Image to PDF" icon={FileImage} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] font-black text-at-teal dark:text-at-teal-dark uppercase tracking-[0.2em] mb-4 pl-4">From PDF</div>
-                      <div className="space-y-0.5">
-                        <DropdownItem to="/tool/pdf-to-word" label="PDF to Word" icon={FileText} />
                         <DropdownItem to="/tool/pdf-to-jpg" label="PDF to Image" icon={FileImage} />
-                        <DropdownItem to="/tool/pdf-to-excel" label="PDF to Excel" icon={LayoutGrid} />
-                        <DropdownItem to="/tool/pdf-to-ppt" label="PDF to PPT" icon={Monitor} />
                       </div>
-                    </div>
-                  </div>
-                )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
               <NavButton label="ALL TOOLS" to="/capabilities" />
             </nav>
 
-            <div className="flex items-center gap-3">
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-at-teal/5 dark:bg-at-teal-dark/10 rounded-full border border-at-teal/10 dark:border-at-teal-dark/20">
-                <ShieldCheck className="w-3.5 h-3.5 text-at-teal dark:text-at-teal-dark" />
-                <span className="text-[9px] font-black uppercase tracking-widest text-at-teal dark:text-at-teal-dark">Private Workspace</span>
+            <div className="flex items-center gap-4">
+              <div className="hidden md:flex items-center gap-3 px-5 py-2.5 bg-theme-primarySoft rounded-full border border-theme-primary/10">
+                <ShieldCheck className="w-4 h-4 text-theme-primary" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-theme-primary">Secure Sync</span>
               </div>
               <button 
                 onClick={toggleTheme}
-                className="p-2.5 rounded-xl text-noir-text dark:text-noir-text-dark hover:bg-noir-bg dark:hover:bg-noir-surface-elevated transition-soft group active:opacity-70"
-                title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+                className="p-3 rounded-2xl text-theme-text hover:bg-theme-primarySoft transition-all group active:scale-90"
               >
-                {theme === 'light' ? <Moon className="w-5 h-5 group-hover:-rotate-6 transition-soft" /> : <Sun className="w-5 h-5 group-hover:rotate-12 transition-soft" />}
+                {mode === 'light' ? <Moon className="w-6 h-6 group-hover:-rotate-12 transition-all" /> : <Sun className="w-6 h-6 group-hover:rotate-12 transition-all" />}
               </button>
-              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden text-noir-text dark:text-noir-text-dark p-2 rounded-xl transition-soft">
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden text-theme-text p-2.5 rounded-2xl transition-all">
+                {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
               </button>
             </div>
           </div>
         </div>
       </header>
-      <div className="h-[74px]" />
+      <div className="h-[90px]" />
       <main className="flex-grow">{children}</main>
-      <footer className="bg-noir-surface dark:bg-noir-surface-dark border-t border-noir-bg dark:border-noir-surface-elevated pt-20 pb-12 transition-soft">
+      <footer className="bg-theme-surface border-t border-theme-border pt-28 pb-16 transition-soft">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between gap-16 mb-20">
+          <div className="flex flex-col md:flex-row justify-between gap-20 mb-24">
             <div className="max-w-md">
-              <Link to="/" className="flex items-center gap-3 mb-8">
-                <div className="bg-at-teal dark:bg-at-teal-dark p-1.5 rounded-lg noir-glow-teal"><Layers className="text-white dark:text-noir-bg-dark w-5 h-5" /></div>
-                <span className="text-2xl font-black text-noir-text dark:text-noir-text-dark">Unbound</span>
+              <Link to="/" className="flex items-center gap-4 mb-10">
+                <div className="bg-theme-primary p-2 rounded-xl noir-glow-teal"><Layers className="text-theme-bg w-6 h-6" /></div>
+                <span className="text-3xl font-black text-theme-text tracking-tighter">Unbound</span>
               </Link>
-              <p className="text-noir-text-muted dark:text-noir-text-darkMuted text-[14px] leading-relaxed mb-10 font-medium">
+              <p className="text-theme-muted text-[16px] leading-relaxed mb-12 font-medium">
                 Simple, secure document tools. Your files are processed instantly and never saved.
               </p>
               <div className="flex gap-4">
-                 <div className="flex items-center gap-2 px-4 py-2 bg-noir-bg dark:bg-noir-surface-elevated rounded-xl border border-noir-bg dark:border-noir-surface-elevated">
-                    <Cpu className="w-4 h-4 text-at-amber dark:text-at-amber-dark" />
-                    <span className="text-[10px] font-black uppercase tracking-widest dark:text-noir-text-dark">Privacy-Focused</span>
+                 <div className="flex items-center gap-3 px-6 py-3 bg-theme-bg rounded-2xl border border-theme-border transition-all hover:scale-105">
+                    <Cpu className="w-5 h-5 text-theme-accent" />
+                    <span className="text-[11px] font-black uppercase tracking-[0.2em] text-theme-text">Privacy Guarded</span>
                  </div>
               </div>
             </div>
-            <div className="flex flex-col gap-4 min-w-[200px]">
-              <ul className="space-y-4 text-[13px] text-noir-text-muted dark:text-noir-text-darkMuted font-semibold pt-4">
-                <li><Link to="/capabilities" className="hover:text-at-teal dark:hover:text-at-teal-dark transition-soft">All Tools</Link></li>
-                <li><Link to="/about" className="hover:text-at-teal dark:hover:text-at-teal-dark transition-soft">About Us</Link></li>
-                <li><Link to="/privacy" className="hover:text-at-teal dark:hover:text-at-teal-dark transition-soft">Privacy Policy</Link></li>
+            <div className="flex flex-col gap-6 min-w-[240px]">
+              <ul className="space-y-5 text-[15px] text-theme-muted font-black tracking-widest uppercase pt-4">
+                <li><Link to="/capabilities" className="hover:text-theme-primary transition-all">All Capabilities</Link></li>
+                <li><Link to="/about" className="hover:text-theme-primary transition-all">Origins</Link></li>
+                <li><Link to="/privacy" className="hover:text-theme-primary transition-all">Privacy Protocol</Link></li>
               </ul>
             </div>
           </div>
-          <div className="pt-12 border-t border-noir-bg dark:border-noir-surface-elevated flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex items-center gap-1.5 text-[11px] font-black text-noir-text-muted/40 dark:text-noir-text-darkDim uppercase tracking-[0.2em]">
-              Safe & Private Processing
+          <div className="pt-16 border-t border-theme-border flex flex-col md:flex-row justify-between items-center gap-10">
+            <div className="flex items-center gap-3 text-[12px] font-black text-theme-muted/40 uppercase tracking-[0.3em]">
+              Safe Processing • Zero Storage
             </div>
-            <div className="text-noir-text-muted/30 dark:text-noir-text-darkDim text-[10px] font-bold uppercase tracking-wider">
-              © 2025 Unbound. All rights reserved.
+            <div className="text-theme-muted/30 text-[11px] font-black uppercase tracking-widest">
+              © 2025 Unbound • Infinite Flow
             </div>
           </div>
         </div>

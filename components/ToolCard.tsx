@@ -12,15 +12,15 @@ export const ToolCard: React.FC<ToolCardProps> = ({ tool }) => {
   return (
     <Link 
       to={`/tool/${tool.id}`}
-      className="group bg-noir-surface dark:bg-noir-surface-dark p-8 rounded-[2rem] border border-noir-text/5 dark:border-noir-surface-elevated shadow-sm hover:shadow-xl dark:hover:noir-glow-teal transition-soft flex flex-col items-center text-center relative overflow-hidden"
+      className="group bg-theme-surface p-8 rounded-[2rem] border border-theme-border shadow-sm hover:shadow-xl dark:hover:noir-glow-teal transition-soft flex flex-col items-center text-center relative overflow-hidden"
     >
-      <div className={`mb-6 p-5 rounded-2xl ${tool.color} text-white dark:text-noir-bg-dark shadow-lg group-hover:brightness-110 transition-soft`}>
+      <div className={`mb-6 p-5 rounded-2xl ${tool.color} text-theme-text dark:text-theme-primary shadow-lg group-hover:brightness-110 transition-soft`}>
         {React.cloneElement(tool.icon as React.ReactElement<any>, { className: 'w-7 h-7' })}
       </div>
-      <h3 className="text-xl font-bold text-noir-text dark:text-noir-text-dark mb-3 leading-tight tracking-tight">{tool.name}</h3>
-      <p className="text-sm text-noir-text-muted dark:text-noir-text-darkMuted font-medium leading-relaxed mb-6 line-clamp-2">{tool.description}</p>
+      <h3 className="text-xl font-bold text-theme-text mb-3 leading-tight tracking-tight">{tool.name}</h3>
+      <p className="text-sm text-theme-muted font-medium leading-relaxed mb-6 line-clamp-2">{tool.description}</p>
       
-      <div className="mt-auto flex items-center gap-1.5 text-at-teal dark:text-at-teal-dark font-bold text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-soft group-hover:translate-x-1">
+      <div className="mt-auto flex items-center gap-1.5 text-theme-primary font-bold text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-soft group-hover:translate-x-1">
         Open Tool <ChevronRight className="w-3 h-3" />
       </div>
 

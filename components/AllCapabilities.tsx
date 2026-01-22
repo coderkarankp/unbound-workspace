@@ -1,16 +1,21 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { TOOLS } from '../constants';
 import { ToolCard } from './ToolCard';
 import { 
   ChevronLeft, ChevronRight, Search, LayoutGrid, 
-  Repeat, Zap, Shield, BrainCircuit, SlidersHorizontal 
+  Repeat, Zap, Shield, SlidersHorizontal 
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export const AllCapabilities: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const selectedCategory = searchParams.get('category') || 'all';
+  const searchQuery = searchParams.get('q') || '';
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  
   const itemsPerPage = 12;
 
   const categories = [
@@ -19,7 +24,6 @@ export const AllCapabilities: React.FC = () => {
     { id: 'optimize', label: 'Optimize', icon: <Zap className="w-4 h-4" /> },
     { id: 'edit', label: 'Edit', icon: <SlidersHorizontal className="w-4 h-4" /> },
     { id: 'security', label: 'Security', icon: <Shield className="w-4 h-4" /> },
-    { id: 'ai', label: 'AI Suite', icon: <BrainCircuit className="w-4 h-4" /> },
   ];
 
   const filteredTools = useMemo(() => {
@@ -34,43 +38,59 @@ export const AllCapabilities: React.FC = () => {
   const totalPages = Math.ceil(filteredTools.length / itemsPerPage);
   const currentTools = filteredTools.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  const updateParams = (newParams: Record<string, string | null>) => {
+    const updated = new URLSearchParams(searchParams);
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (value === null || value === 'all' || (key === 'page' && value === '1') || (key === 'q' && value === '')) {
+        updated.delete(key);
+      } else {
+        updated.set(key, value);
+      }
+    });
+    setSearchParams(updated);
+  };
+
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    updateParams({ page: page.toString() });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="bg-noir-bg dark:bg-noir-bg-dark min-h-screen py-20 transition-soft">
+    <div className="bg-theme-bg min-h-screen py-20 transition-soft">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in-up-soft">
-          <h1 className="text-5xl font-black text-noir-text dark:text-noir-text-dark mb-6 tracking-tighter">
-            Full <span className="text-at-teal dark:text-at-teal-dark">Capability</span> Suite
+          <h1 className="text-5xl font-black text-theme-text mb-6 tracking-tighter">
+            Full <span className="text-theme-primary">Capability</span> Suite
           </h1>
-          <p className="text-lg text-noir-text-muted dark:text-noir-text-darkMuted font-medium max-w-2xl mx-auto">
+          <p className="text-lg text-theme-muted font-medium max-w-2xl mx-auto">
             Discover the specialized tools driving the next generation of intelligent document management.
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6 mb-12 animate-fade-in-up-soft delay-100">
           <div className="flex-grow relative group">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-noir-text-dim dark:text-noir-text-darkDim group-focus-within:text-at-teal transition-soft" />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-dim group-focus-within:text-theme-primary transition-soft" />
             <input 
               type="text"
               placeholder="Search tools..."
               value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-              className="w-full bg-noir-surface dark:bg-noir-surface-dark border border-noir-bg dark:border-noir-surface-elevated rounded-2xl py-4 pl-14 pr-6 text-noir-text dark:text-noir-text-dark font-bold text-sm focus:border-at-teal/40 outline-none transition-soft shadow-sm"
+              onChange={(e) => { 
+                updateParams({ q: e.target.value, page: '1' });
+              }}
+              className="w-full bg-theme-surface border border-theme-border rounded-2xl py-4 pl-14 pr-6 text-theme-text font-bold text-sm focus:border-theme-primary/40 outline-none transition-soft shadow-sm"
             />
           </div>
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => { setSelectedCategory(cat.id); setCurrentPage(1); }}
+                onClick={() => { 
+                  updateParams({ category: cat.id, page: '1' });
+                }}
                 className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-soft ${
                   selectedCategory === cat.id 
-                  ? 'bg-at-teal dark:bg-at-teal-dark text-white dark:text-noir-bg-dark shadow-md noir-glow-teal' 
-                  : 'bg-noir-surface dark:bg-noir-surface-dark text-noir-text-muted dark:text-noir-text-darkMuted border border-noir-bg dark:border-noir-surface-elevated hover:brightness-105'
+                  ? 'bg-theme-primary text-theme-bg shadow-md noir-glow-teal' 
+                  : 'bg-theme-surface text-theme-muted border border-theme-border hover:brightness-105'
                 }`}
               >
                 {cat.icon} {cat.label}
@@ -83,9 +103,14 @@ export const AllCapabilities: React.FC = () => {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
               {currentTools.map((tool, idx) => (
-                <div key={tool.id} className="animate-fade-in-up-soft opacity-0" style={{ animationDelay: `${idx * 40}ms` }}>
+                <motion.div 
+                  key={tool.id} 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                >
                   <ToolCard tool={tool} />
-                </div>
+                </motion.div>
               ))}
             </div>
 
@@ -94,7 +119,7 @@ export const AllCapabilities: React.FC = () => {
                 <button 
                   disabled={currentPage === 1}
                   onClick={() => handlePageChange(currentPage - 1)}
-                  className="p-4 rounded-xl bg-noir-surface dark:bg-noir-surface-dark text-noir-text dark:text-noir-text-dark disabled:opacity-30 transition-soft border border-noir-bg dark:border-noir-surface-elevated"
+                  className="p-4 rounded-xl bg-theme-surface text-theme-text disabled:opacity-30 transition-soft border border-theme-border"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -105,8 +130,8 @@ export const AllCapabilities: React.FC = () => {
                       onClick={() => handlePageChange(i + 1)}
                       className={`w-12 h-12 rounded-xl text-sm font-black transition-soft ${
                         currentPage === i + 1 
-                        ? 'bg-at-teal dark:bg-at-teal-dark text-white dark:text-noir-bg-dark shadow-lg noir-glow-teal' 
-                        : 'bg-noir-surface dark:bg-noir-surface-dark text-noir-text-muted dark:text-noir-text-darkMuted hover:text-noir-text'
+                        ? 'bg-theme-primary text-theme-bg shadow-lg noir-glow-teal' 
+                        : 'bg-theme-surface text-theme-muted hover:text-theme-text'
                       }`}
                     >
                       {i + 1}
@@ -116,7 +141,7 @@ export const AllCapabilities: React.FC = () => {
                 <button 
                   disabled={currentPage === totalPages}
                   onClick={() => handlePageChange(currentPage + 1)}
-                  className="p-4 rounded-xl bg-noir-surface dark:bg-noir-surface-dark text-noir-text dark:text-noir-text-dark disabled:opacity-30 transition-soft border border-noir-bg dark:border-noir-surface-elevated"
+                  className="p-4 rounded-xl bg-theme-surface text-theme-text disabled:opacity-30 transition-soft border border-theme-border"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -124,12 +149,12 @@ export const AllCapabilities: React.FC = () => {
             )}
           </>
         ) : (
-          <div className="text-center py-20 bg-noir-surface dark:bg-noir-surface-dark rounded-[3rem] border border-dashed border-noir-text/10 dark:border-noir-surface-elevated animate-fade-in-up-soft">
-            <div className="p-8 rounded-full bg-noir-bg dark:bg-noir-surface-elevated text-at-teal inline-block mb-6">
+          <div className="text-center py-20 bg-theme-surface rounded-[3rem] border-2 border-dashed border-theme-border animate-fade-in-up-soft">
+            <div className="p-8 rounded-full bg-theme-bg text-theme-primary inline-block mb-6">
               <Search className="w-10 h-10" />
             </div>
-            <h3 className="text-xl font-bold text-noir-text dark:text-noir-text-dark mb-2">No tools match your search</h3>
-            <p className="text-noir-text-dim dark:text-noir-text-darkDim font-medium text-sm">Try broadening your search or switching categories.</p>
+            <h3 className="text-xl font-bold text-theme-text mb-2">No tools match your search</h3>
+            <p className="text-theme-dim font-medium text-sm">Try broadening your search or switching categories.</p>
           </div>
         )}
       </div>

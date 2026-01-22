@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Routes, Route, useLocation, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Layout } from './components/Layout';
 import { ToolCard } from './components/ToolCard';
 import { ToolPage } from './components/ToolPage';
@@ -9,62 +10,56 @@ import { TOOLS } from './constants';
 import { Sparkles, ArrowRight, CheckCircle2, Shield, Fingerprint, MousePointer2, ShieldCheck, Cpu, Lock, Zap } from 'lucide-react';
 
 const AboutUsPage: React.FC = () => (
-  <div className="max-w-4xl mx-auto px-4 py-24 animate-fade-in-up-soft">
-    <h1 className="text-5xl font-black text-noir-text dark:text-noir-text-dark mb-8 tracking-tighter">About Unbound</h1>
-    <div className="space-y-8 text-lg text-noir-text-muted dark:text-noir-text-darkMuted leading-relaxed font-medium">
+  <div className="max-w-4xl mx-auto px-4 py-24 page-flow-in">
+    <h1 className="text-6xl font-black text-theme-text mb-10 tracking-tight">About <span className="text-theme-primary">Unbound</span></h1>
+    <div className="space-y-10 text-xl text-theme-muted leading-relaxed font-medium">
       <p>
         Unbound Workspace was built on a simple premise: professional document tools shouldn't come at the cost of your privacy.
       </p>
       <p>
         Most online PDF editors require you to upload files to their servers, where they might stay for hours or even days. We took a different approach. Our platform is designed as a "processing node" — a stateless environment where your files are handled in real-time and immediately purged.
       </p>
-      <div className="grid md:grid-cols-3 gap-8 pt-8">
-        <div className="p-8 bg-noir-surface dark:bg-noir-surface-dark rounded-3xl border border-noir-text/5">
-          <Zap className="w-8 h-8 text-at-teal mb-4" />
-          <h3 className="font-bold text-noir-text dark:text-noir-text-dark mb-2">Instant</h3>
+      <div className="grid md:grid-cols-3 gap-10 pt-10">
+        <motion.div whileHover={{y:-10}} className="p-10 bg-theme-surface rounded-[2.5rem] border border-theme-border shadow-xl">
+          <Zap className="w-10 h-10 text-theme-primary mb-5" />
+          <h3 className="font-black text-theme-text mb-3 text-2xl">Instant</h3>
           <p className="text-sm">Real-time processing without queues.</p>
-        </div>
-        <div className="p-8 bg-noir-surface dark:bg-noir-surface-dark rounded-3xl border border-noir-text/5">
-          <ShieldCheck className="w-8 h-8 text-at-teal mb-4" />
-          <h3 className="font-bold text-noir-text dark:text-noir-text-dark mb-2">Private</h3>
+        </motion.div>
+        <motion.div whileHover={{y:-10}} className="p-10 bg-theme-surface rounded-[2.5rem] border border-theme-border shadow-xl">
+          <ShieldCheck className="w-10 h-10 text-theme-primary mb-5" />
+          <h3 className="font-black text-theme-text mb-3 text-2xl">Private</h3>
           <p className="text-sm">Zero storage architecture by design.</p>
-        </div>
-        <div className="p-8 bg-noir-surface dark:bg-noir-surface-dark rounded-3xl border border-noir-text/5">
-          <Cpu className="w-8 h-8 text-at-teal mb-4" />
-          <h3 className="font-bold text-noir-text dark:text-noir-text-dark mb-2">Smart</h3>
+        </motion.div>
+        <motion.div whileHover={{y:-10}} className="p-10 bg-theme-surface rounded-[2.5rem] border border-theme-border shadow-xl">
+          <Cpu className="w-10 h-10 text-theme-primary mb-5" />
+          <h3 className="font-black text-theme-text mb-3 text-2xl">Smart</h3>
           <p className="text-sm">AI-powered tools for modern workflows.</p>
-        </div>
+        </motion.div>
       </div>
     </div>
   </div>
 );
 
 const PrivacyPolicyPage: React.FC = () => (
-  <div className="max-w-4xl mx-auto px-4 py-24 animate-fade-in-up-soft">
-    <h1 className="text-5xl font-black text-noir-text dark:text-noir-text-dark mb-8 tracking-tighter">Privacy Policy</h1>
-    <div className="space-y-8 text-lg text-noir-text-muted dark:text-noir-text-darkMuted leading-relaxed font-medium">
-      <div className="p-10 bg-at-teal/5 border border-at-teal/20 rounded-[2.5rem]">
-        <h2 className="text-2xl font-black text-at-teal mb-4">Our Core Commitment</h2>
-        <p className="text-noir-text dark:text-noir-text-dark">
-          We do not store any data, and we process all requests instantly. Your documents exist on our platform only for the duration of the processing cycle.
+  <div className="max-w-4xl mx-auto px-4 py-24 page-flow-in">
+    <h1 className="text-6xl font-black text-theme-text mb-10 tracking-tight">Privacy <span className="text-theme-primary">Protocol</span></h1>
+    <div className="space-y-10 text-xl text-theme-muted leading-relaxed font-medium">
+      <div className="p-12 bg-theme-primarySoft border border-theme-primary/20 rounded-[3.5rem] shadow-inner">
+        <h2 className="text-3xl font-black text-theme-primary mb-6">Our Core Commitment</h2>
+        <p className="text-theme-text text-xl leading-relaxed">
+          We do not store any data. Your documents exist on our platform only for the precise duration of the processing cycle.
         </p>
       </div>
-      <section className="space-y-4">
-        <h3 className="text-xl font-bold text-noir-text dark:text-noir-text-dark">Stateless Processing</h3>
+      <section className="space-y-6">
+        <h3 className="text-2xl font-black text-theme-text">Stateless Processing</h3>
         <p>
-          Unbound Workspace operates on a stateless architecture. This means that as soon as your conversion or edit is complete and you download the file, the data is wiped from our active memory. We do not maintain databases of user files.
+          Unbound Workspace operates on a stateless architecture. This means that as soon as your conversion is complete and you download the file, the data is wiped from our active memory.
         </p>
       </section>
-      <section className="space-y-4">
-        <h3 className="text-xl font-bold text-noir-text dark:text-noir-text-dark">No Accounts, No Tracking</h3>
+      <section className="space-y-6">
+        <h3 className="text-2xl font-black text-theme-text">No Accounts, No Tracking</h3>
         <p>
-          We don't require accounts to use our tools. By removing the login requirement, we ensure that your document processing history is never tied to a personal identity.
-        </p>
-      </section>
-      <section className="space-y-4">
-        <h3 className="text-xl font-bold text-noir-text dark:text-noir-text-dark">AI Privacy</h3>
-        <p>
-          When using our AI-powered features (like Summarization or OCR), your data is sent via encrypted channels to our processing engine and is never used to train global AI models.
+          We don't require accounts. By removing the login requirement, we ensure that your document processing history is never tied to a personal identity.
         </p>
       </section>
     </div>
@@ -73,81 +68,131 @@ const PrivacyPolicyPage: React.FC = () => (
 
 const HomePage: React.FC = () => {
   return (
-    <div className="bg-noir-bg dark:bg-noir-bg-dark min-h-screen transition-soft">
-      <section className="relative pt-32 pb-24 overflow-hidden">
+    <div className="bg-theme-bg min-h-screen transition-soft overflow-hidden">
+      <section className="relative pt-40 pb-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 bg-at-amber/10 dark:bg-at-amber-dark/20 text-at-amber dark:text-at-amber-dark px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-10 animate-fade-in-up-soft">
-            <ShieldCheck className="w-4 h-4" />
-            Secure & Private
-          </div>
-          <h1 className="text-6xl md:text-8xl font-black text-noir-text dark:text-noir-text-dark mb-8 tracking-tighter leading-[0.9] animate-fade-in-up-soft delay-100 opacity-0">
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="inline-flex items-center gap-3 bg-theme-accent/10 text-theme-accent px-6 py-2.5 rounded-full text-[12px] font-black uppercase tracking-[0.25em] mb-12 shadow-sm"
+          >
+            <ShieldCheck className="w-5 h-5" />
+            Zero Storage Protocol
+          </motion.div>
+          
+          <motion.h1 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="text-7xl md:text-9xl font-black text-theme-text mb-10 tracking-tight leading-[0.85]"
+          >
             Privacy First.<br />
-            <span className="text-at-teal dark:text-at-teal-dark inline-block">Unbound</span> Documents.
-          </h1>
-          <p className="text-xl text-noir-text-muted dark:text-noir-text-darkMuted max-w-2xl mx-auto mb-14 font-medium leading-relaxed animate-fade-in-up-soft delay-200 opacity-0">
+            <span className="text-theme-primary inline-block relative">
+              Unbound
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: '100%' }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+                className="absolute -bottom-2 left-0 h-3 bg-theme-primary/20 -z-10" 
+              />
+            </span> Documents.
+          </motion.h1>
+
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-2xl text-theme-muted max-w-2xl mx-auto mb-16 font-medium leading-relaxed"
+          >
             Professional document tools that respect your privacy. No accounts, no logs, and no storage. Your files stay yours.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 animate-fade-in-up-soft delay-300 opacity-0">
-            <Link to="/capabilities" className="bg-at-teal dark:bg-at-teal-dark text-white dark:text-noir-bg-dark px-12 py-5 rounded-2xl font-bold text-lg hover:brightness-110 transition-soft shadow-lg active:opacity-90 noir-glow-teal">
-              Explore Tools
+          </motion.p>
+
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-col sm:flex-row justify-center items-center gap-8"
+          >
+            <Link to="/capabilities" className="group bg-theme-primary text-theme-bg px-14 py-6 rounded-3xl font-black text-xl hover:scale-105 transition-all shadow-2xl active:opacity-90 noir-glow-teal relative overflow-hidden">
+              <span className="relative z-10">Explore All Tools</span>
+              <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
             </Link>
-          </div>
-          <div className="mt-24 flex flex-wrap justify-center gap-12 opacity-30 dark:opacity-20 animate-fade-in-up-soft delay-500 opacity-0">
-            <div className="flex items-center gap-2 font-bold text-noir-text dark:text-noir-text-dark"><Shield className="w-5 h-5" /> NO STORAGE</div>
-            <div className="flex items-center gap-2 font-bold text-noir-text dark:text-noir-text-dark"><Fingerprint className="w-5 h-5" /> FAST PROCESSING</div>
-            <div className="flex items-center gap-2 font-bold text-noir-text dark:text-noir-text-dark"><MousePointer2 className="w-5 h-5" /> NO ACCOUNTS</div>
-          </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.4 }}
+            transition={{ delay: 0.6 }}
+            className="mt-32 flex flex-wrap justify-center gap-16"
+          >
+            <div className="flex items-center gap-3 font-black text-[12px] uppercase tracking-widest text-theme-text"><Shield className="w-6 h-6 text-theme-primary" /> NO STORAGE</div>
+            <div className="flex items-center gap-3 font-black text-[12px] uppercase tracking-widest text-theme-text"><Fingerprint className="w-6 h-6 text-theme-primary" /> FAST SYNC</div>
+            <div className="flex items-center gap-3 font-black text-[12px] uppercase tracking-widest text-theme-text"><MousePointer2 className="w-6 h-6 text-theme-primary" /> NO AUTH</div>
+          </motion.div>
         </div>
+
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none -z-10 overflow-hidden">
-          <div className="absolute top-[10%] left-[5%] w-[30%] h-[30%] bg-at-teal/10 dark:bg-at-teal-dark/5 blur-[120px] rounded-full animate-pulse-gentle" />
-          <div className="absolute bottom-[20%] right-[10%] w-[40%] h-[40%] bg-at-amber/5 dark:bg-at-amber-dark/5 blur-[140px] rounded-full animate-pulse-gentle" style={{ animationDelay: '3s' }} />
+          <div className="absolute top-[15%] left-[10%] w-[35%] h-[35%] bg-theme-primary/10 blur-[150px] rounded-full animate-pulse-gentle" />
+          <div className="absolute bottom-[20%] right-[10%] w-[45%] h-[45%] bg-theme-accent/5 blur-[180px] rounded-full animate-pulse-gentle" style={{ animationDelay: '3s' }} />
+          <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]">
+             <div className="absolute top-0 left-[20%] w-px h-full bg-theme-text" />
+             <div className="absolute top-0 left-[40%] w-px h-full bg-theme-text" />
+             <div className="absolute top-0 left-[60%] w-px h-full bg-theme-text" />
+             <div className="absolute top-0 left-[80%] w-px h-full bg-theme-text" />
+          </div>
         </div>
       </section>
 
-      <section id="tools" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 animate-fade-in-up-soft">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-40">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
           <div className="max-w-xl">
-            <h2 className="text-4xl font-bold text-noir-text dark:text-noir-text-dark mb-4 tracking-tight">The Toolkit</h2>
-            <p className="text-lg text-noir-text-muted dark:text-noir-text-darkMuted font-medium leading-relaxed">Fast and secure tools for all your document needs.</p>
+            <h2 className="text-5xl font-black text-theme-text mb-6 tracking-tight">The Arsenal</h2>
+            <p className="text-xl text-theme-muted font-medium leading-relaxed">Fast and secure tools for all your document needs.</p>
           </div>
-          <Link to="/capabilities" className="flex items-center gap-2 text-at-teal dark:text-at-teal-dark font-black text-[11px] uppercase tracking-widest hover:translate-x-1 transition-soft group">
-            Explore All Tools <ArrowRight className="w-4 h-4" />
+          <Link to="/capabilities" className="flex items-center gap-3 text-theme-primary font-black text-[13px] uppercase tracking-widest hover:translate-x-2 transition-all group">
+            All Capabilities <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {TOOLS.slice(0, 8).map((tool, idx) => (
-            <div key={tool.id} className="animate-fade-in-up-soft opacity-0" style={{ animationDelay: `${idx * 40 + 400}ms` }}>
+            <motion.div 
+              key={tool.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.05 }}
+            >
               <ToolCard tool={tool} />
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
 
-      <section className="mx-4 lg:mx-8 mb-32">
-        <div className="max-w-7xl mx-auto bg-noir-text dark:bg-noir-surface-elevated rounded-[3rem] overflow-hidden shadow-2xl relative group">
+      <section className="mx-6 lg:mx-12 mb-40">
+        <div className="max-w-7xl mx-auto bg-theme-elevated rounded-[4rem] overflow-hidden shadow-2xl relative group">
           <div className="grid md:grid-cols-2 gap-0 relative z-10">
-            <div className="p-16 lg:p-24 flex flex-col justify-center">
-              <div className="bg-at-teal/20 text-at-teal-dark dark:text-at-teal-dark px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-8 w-fit">
+            <div className="p-16 lg:p-28 flex flex-col justify-center">
+              <div className="bg-theme-primarySoft text-theme-primary px-5 py-2 rounded-full text-[12px] font-black uppercase tracking-[0.25em] mb-10 w-fit">
                 Smart & Secure
               </div>
-              <h2 className="text-4xl lg:text-5xl font-bold text-white dark:text-noir-text-dark mb-8 tracking-tight leading-tight">Instant processing.<br />Permanent privacy.</h2>
-              <p className="text-noir-bg/60 dark:text-noir-text-darkMuted text-lg mb-10 leading-relaxed font-medium">
+              <h2 className="text-5xl lg:text-6xl font-black text-theme-text mb-10 tracking-tight leading-tight">Instant sync.<br />Permanent privacy.</h2>
+              <p className="text-theme-muted text-xl mb-12 leading-relaxed font-medium">
                 Our processing is completely private. Files are handled in temporary memory and are deleted immediately after you download your results.
               </p>
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {["No Data Stored", "Secure Processing", "Auto-Delete on Close", "Private Connection"].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4 text-white/90 dark:text-noir-text-dark font-semibold transition-soft">
-                    <div className="bg-at-teal dark:bg-at-teal-dark p-1.5 rounded-lg shadow-lg noir-glow-teal">
-                      <CheckCircle2 className="w-4 h-4 text-white dark:text-noir-bg-dark" />
+                  <div key={i} className="flex items-center gap-5 text-theme-text font-bold text-lg">
+                    <div className="bg-theme-primary p-2 rounded-xl shadow-lg noir-glow-teal">
+                      <CheckCircle2 className="w-5 h-5 text-theme-bg" />
                     </div>
                     {item}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="relative min-h-[500px] overflow-hidden opacity-30">
-              <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&q=80&w=1000" alt="Security" className="absolute inset-0 w-full h-full object-cover grayscale mix-blend-overlay group-hover:scale-105 transition-soft duration-1000" />
-              <div className="absolute inset-0 bg-gradient-to-l from-transparent to-noir-text dark:to-noir-surface-elevated" />
+            <div className="relative min-h-[600px] overflow-hidden opacity-40">
+              <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&q=80&w=1000" alt="Security" className="absolute inset-0 w-full h-full object-cover grayscale mix-blend-overlay group-hover:scale-110 transition-all duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-l from-transparent to-theme-elevated" />
             </div>
           </div>
         </div>
@@ -160,13 +205,15 @@ const AnimatedRoutes: React.FC = () => {
   const location = useLocation();
   return (
     <div key={location.pathname} className="page-flow-in">
-      <Routes location={location}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/tool/:id" element={<ToolPage />} />
-        <Route path="/capabilities" element={<AllCapabilities />} />
-        <Route path="/about" element={<AboutUsPage />} />
-        <Route path="/privacy" element={<PrivacyPolicyPage />} />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <Routes location={location}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/tool/:id" element={<ToolPage />} />
+          <Route path="/capabilities" element={<AllCapabilities />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        </Routes>
+      </AnimatePresence>
     </div>
   );
 };
