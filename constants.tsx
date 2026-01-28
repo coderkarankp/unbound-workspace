@@ -2,8 +2,7 @@
 import React from 'react';
 import { 
   Files, Scissors, Zap, FileImage, Lock, RotateCw, 
-  Unlock, PenTool, Minimize2, Wrench, Type, Trash2, 
-  Layers, Shapes, Grid, Settings, Eye, Clock
+  Grid, Settings, FileText
 } from 'lucide-react';
 import { Tool } from './types';
 
@@ -30,7 +29,7 @@ export const TOOLS: Tool[] = [
     description: 'Reduce file size while optimizing for maximal quality.',
     icon: <Zap className="w-8 h-8" />,
     category: 'optimize',
-    color: 'bg-theme-secondarySoft'
+    color: 'bg-theme-primarySoft'
   },
   {
     id: 'protect-pdf',
@@ -65,14 +64,6 @@ export const TOOLS: Tool[] = [
     color: 'bg-theme-primarySoft'
   },
   {
-    id: 'flatten-pdf',
-    name: 'Flatten PDF',
-    description: 'Merge form fields and annotations into page content.',
-    icon: <Shapes className="w-8 h-8" />,
-    category: 'edit',
-    color: 'bg-theme-primarySoft'
-  },
-  {
     id: 'organize-pdf',
     name: 'Organize PDF',
     description: 'Rearrange, delete or add pages with visual editor.',
@@ -86,22 +77,6 @@ export const TOOLS: Tool[] = [
     description: 'Change author, title, and keywords of your PDF.',
     icon: <Settings className="w-8 h-8" />,
     category: 'edit',
-    color: 'bg-theme-primarySoft'
-  },
-  {
-    id: 'dark-mode-pdf',
-    name: 'Dark Mode PDF',
-    description: 'Invert document colors for comfortable night reading.',
-    icon: <Eye className="w-8 h-8" />,
-    category: 'optimize',
-    color: 'bg-theme-primarySoft'
-  },
-  {
-    id: 'unlock-pdf',
-    name: 'Unlock PDF',
-    description: 'Remove password and permissions from secured PDFs.',
-    icon: <Unlock className="w-8 h-8" />,
-    category: 'security',
     color: 'bg-theme-primarySoft'
   }
 ];

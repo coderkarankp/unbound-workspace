@@ -87,24 +87,6 @@ export const RotatePanel = ({ config, setConfig, pdfDoc, numPages }: any) => {
             ))}
           </div>
         </div>
-        
-        <div className="space-y-4">
-          <label className="text-[10px] font-black uppercase text-theme-muted flex items-center gap-2">
-            <ListChecks className="w-3 h-3" /> Tool Instructions
-          </label>
-          <div className="p-6 bg-theme-bg rounded-2xl border border-theme-border flex items-start gap-4">
-            <Info className="w-5 h-5 text-theme-primary shrink-0 mt-1" />
-            <div className="space-y-2">
-              <p className="text-[12px] text-theme-muted font-medium leading-relaxed">
-                <span className="text-theme-primary font-black">Batch Mode:</span> Use the buttons above to set a uniform rotation for all pages.
-              </p>
-              <p className="text-[12px] text-theme-muted font-medium leading-relaxed">
-                <span className="text-theme-primary font-black">Manual Mode:</span> Click on any page thumbnail in the visualizer to rotate that specific page by 90°.
-              </p>
-            </div>
-          </div>
-        </div>
-
         <button 
           onClick={() => setConfig({ ...config, pageRotations: {} })}
           className="w-full py-4 bg-theme-bg border border-theme-border text-theme-muted rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-red-500/5 hover:text-red-500 transition-all flex items-center justify-center gap-3"
@@ -112,11 +94,9 @@ export const RotatePanel = ({ config, setConfig, pdfDoc, numPages }: any) => {
           <RotateCcw className="w-4 h-4" /> Reset All Rotations
         </button>
       </div>
-
       <div className="space-y-4">
         <label className="text-[10px] font-black uppercase text-theme-muted flex items-center justify-between">
           <span>Page Visualizer</span>
-          <span className="text-theme-primary font-black">Target Layout</span>
         </label>
         <div className="grid grid-cols-3 gap-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar border-2 border-theme-border p-4 rounded-[2.5rem] bg-theme-bg/30 shadow-inner">
           {Array.from({ length: numPages }, (_, i) => i + 1).map(pNum => (
@@ -157,64 +137,6 @@ export const MetadataPanel = ({ config, setConfig }: any) => (
         className="w-full bg-theme-surface py-3 px-4 rounded-xl border border-theme-border outline-none font-black text-theme-text placeholder:text-theme-muted/50 focus:border-theme-primary" 
       />
     </div>
-    <div className="space-y-2">
-      <label className="text-[10px] font-black uppercase text-theme-muted">Keywords (comma separated)</label>
-      <input 
-        type="text" 
-        placeholder="e.g. report, annual, 2025" 
-        value={config.metaKeywords || ''} 
-        onChange={e => setConfig({...config, metaKeywords: e.target.value})} 
-        className="w-full bg-theme-surface py-3 px-4 rounded-xl border border-theme-border outline-none font-black text-theme-text placeholder:text-theme-muted/50 focus:border-theme-primary" 
-      />
-    </div>
-  </div>
-);
-
-export const WatermarkPanel = ({ config, setConfig }: any) => (
-  <div className="space-y-6 text-left">
-    <div className="flex gap-4 p-1 bg-theme-bg rounded-xl">
-      <button onClick={() => setConfig({ ...config, watermarkType: 'text' })} className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-[10px] font-black uppercase transition-all ${config.watermarkType === 'text' ? 'bg-theme-primary text-theme-bg' : 'text-theme-muted'}`}><Type className="w-3 h-3" /> Text</button>
-      <button onClick={() => setConfig({ ...config, watermarkType: 'image' })} className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-[10px] font-black uppercase transition-all ${config.watermarkType === 'image' ? 'bg-theme-primary text-theme-bg' : 'text-theme-muted'}`}><ImageIcon className="w-3 h-3" /> Image</button>
-    </div>
-    {config.watermarkType === 'text' ? (
-      <div className="space-y-2">
-        <label className="text-[10px] font-black uppercase text-theme-muted">Watermark Text</label>
-        <input 
-          type="text" 
-          placeholder="e.g. CONFIDENTIAL"
-          value={config.watermarkText} 
-          onChange={e => setConfig({...config, watermarkText: e.target.value})} 
-          className="w-full bg-theme-surface py-3 px-4 rounded-xl border border-theme-border focus:border-theme-primary outline-none font-black text-theme-text placeholder:text-theme-muted/50" 
-        />
-      </div>
-    ) : (
-      <div className="space-y-2">
-        <label className="text-[10px] font-black uppercase text-theme-muted">Select Image</label>
-        <input 
-          type="file" 
-          accept="image/*" 
-          onChange={e => {
-            const file = e.target.files?.[0];
-            if (file) {
-              const reader = new FileReader();
-              reader.onload = ev => setConfig({...config, watermarkImage: ev.target?.result});
-              reader.readAsDataURL(file);
-            }
-          }} 
-          className="text-xs w-full text-theme-text file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-theme-primarySoft file:text-theme-primary hover:file:bg-theme-primary/20" 
-        />
-      </div>
-    )}
-    <div className="grid grid-cols-2 gap-4">
-      <div>
-        <label className="text-[10px] font-black uppercase text-theme-muted">Transparency</label>
-        <input type="range" min="0" max="1" step="0.1" value={config.watermarkOpacity} onChange={e => setConfig({...config, watermarkOpacity: parseFloat(e.target.value)})} className="w-full accent-theme-primary" />
-      </div>
-      <div>
-        <label className="text-[10px] font-black uppercase text-theme-muted">Size</label>
-        <input type="range" min="10" max="200" value={config.watermarkSize} onChange={e => setConfig({...config, watermarkSize: parseInt(e.target.value)})} className="w-full accent-theme-primary" />
-      </div>
-    </div>
   </div>
 );
 
@@ -225,13 +147,9 @@ export const SplitPanel = ({ config, setConfig, pdfDoc, numPages }: any) => (
         <button onClick={() => setConfig({ ...config, splitMode: 'individual' })} className={`flex-1 py-3 rounded-lg text-[10px] font-black uppercase transition-all ${config.splitMode === 'individual' ? 'bg-theme-primary text-theme-bg' : 'text-theme-muted'}`}>Extract Pages</button>
         <button onClick={() => setConfig({ ...config, splitMode: 'merged' })} className={`flex-1 py-3 rounded-lg text-[10px] font-black uppercase transition-all ${config.splitMode === 'merged' ? 'bg-theme-primary text-theme-bg' : 'text-theme-muted'}`}>Merge Pages</button>
       </div>
-      <div className="space-y-4">
-        <label className="text-[10px] font-black uppercase text-theme-muted">Page Management</label>
-        <p className="text-[10px] text-theme-muted italic">Click on the pages in the preview to select them.</p>
-        <div className="flex gap-2">
-           <button onClick={() => setConfig({...config, selectedPages: Array.from({length: numPages}, (_,i)=>i+1)})} className="text-[9px] font-black uppercase px-3 py-1 bg-theme-primarySoft text-theme-primary rounded-md">Select All</button>
-           <button onClick={() => setConfig({...config, selectedPages: []})} className="text-[9px] font-black uppercase px-3 py-1 bg-red-500/10 text-red-500 rounded-md">Clear</button>
-        </div>
+      <div className="flex gap-2">
+         <button onClick={() => setConfig({...config, selectedPages: Array.from({length: numPages}, (_,i)=>i+1)})} className="text-[9px] font-black uppercase px-3 py-1 bg-theme-primarySoft text-theme-primary rounded-md">Select All</button>
+         <button onClick={() => setConfig({...config, selectedPages: []})} className="text-[9px] font-black uppercase px-3 py-1 bg-red-500/10 text-red-500 rounded-md">Clear</button>
       </div>
     </div>
     <div className="space-y-4">
@@ -265,22 +183,6 @@ export const SecurityPanel = ({ config, setConfig }: any) => (
       onChange={e => setConfig({...config, confirmPassword: e.target.value})} 
       className="w-full bg-theme-surface py-3 px-4 rounded-xl border border-theme-border outline-none font-black text-theme-text placeholder:text-theme-muted/50 focus:border-theme-primary" 
     />
-    <p className="text-[10px] text-theme-accent font-bold italic">Remember this password. You will need it to open the PDF later.</p>
-  </div>
-);
-
-export const AIConfigPanel = ({ config, setConfig, id }: any) => (
-  <div className="text-left space-y-4">
-     {id === 'pdf-translate' && (
-       <>
-         <label className="text-[10px] font-black uppercase text-theme-muted flex items-center gap-2"><Globe className="w-3 h-3" /> Select Language</label>
-         <select value={config.targetLang} onChange={e => setConfig({...config, targetLang: e.target.value})} className="w-full bg-theme-surface py-3 px-4 rounded-xl border border-theme-border font-black text-theme-text">
-           {['English', 'Spanish', 'French', 'German', 'Japanese', 'Chinese', 'Hindi', 'Arabic', 'Portuguese', 'Russian'].map(l => <option key={l} value={l}>{l}</option>)}
-         </select>
-       </>
-     )}
-     <div className="bg-theme-bg p-4 rounded-xl border border-theme-border">
-        <p className="text-[11px] font-medium text-theme-muted">Your document is being processed privately by Gemini. No data is stored.</p>
-     </div>
+    <p className="text-[10px] text-theme-accent font-bold italic">AES-256 encryption applied locally.</p>
   </div>
 );

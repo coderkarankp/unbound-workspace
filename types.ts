@@ -6,7 +6,7 @@ export interface Tool {
   name: string;
   description: string;
   icon: React.ReactNode;
-  category: 'convert' | 'optimize' | 'edit' | 'security' | 'ai';
+  category: 'convert' | 'optimize' | 'edit' | 'security';
   color: string;
 }
 
@@ -22,18 +22,12 @@ export interface FileState {
 }
 
 export type ToolID = 
-  | 'pdf-to-word' 
-  | 'word-to-pdf' 
   | 'merge-pdf' 
   | 'split-pdf' 
   | 'compress-pdf' 
-  | 'ai-summarize' 
-  | 'pdf-translate'
   | 'protect-pdf'
   | 'rotate-pdf'
   | 'pdf-to-jpg'
   | 'jpg-to-pdf'
-  | 'pdf-to-ppt'
-  | 'pdf-to-excel'
-  | 'pdf-to-json'
-  | 'watermark-pdf';
+  | 'organize-pdf'
+  | 'metadata-editor';
