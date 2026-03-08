@@ -6,7 +6,7 @@ export interface Tool {
   name: string;
   description: string;
   icon: React.ReactNode;
-  category: 'convert' | 'optimize' | 'edit' | 'security';
+  category: 'convert' | 'optimize' | 'edit';
   color: string;
 }
 
@@ -25,7 +25,6 @@ export type ToolID =
   | 'merge-pdf' 
   | 'split-pdf' 
   | 'compress-pdf' 
-  | 'protect-pdf'
   | 'rotate-pdf'
   | 'pdf-to-jpg'
   | 'jpg-to-pdf'

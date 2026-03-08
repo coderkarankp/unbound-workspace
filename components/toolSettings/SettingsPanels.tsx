@@ -166,23 +166,3 @@ export const SplitPanel = ({ config, setConfig, pdfDoc, numPages }: any) => (
   </div>
 );
 
-export const SecurityPanel = ({ config, setConfig }: any) => (
-  <div className="space-y-4 text-left">
-    <label className="text-[10px] font-black uppercase text-theme-muted flex items-center gap-2"><Lock className="w-3 h-3" /> Set Password</label>
-    <input 
-      type="password" 
-      placeholder="New Password" 
-      value={config.password} 
-      onChange={e => setConfig({...config, password: e.target.value})} 
-      className="w-full bg-theme-surface py-3 px-4 rounded-xl border border-theme-border outline-none font-black text-theme-text placeholder:text-theme-muted/50 focus:border-theme-primary" 
-    />
-    <input 
-      type="password" 
-      placeholder="Confirm Password" 
-      value={config.confirmPassword} 
-      onChange={e => setConfig({...config, confirmPassword: e.target.value})} 
-      className="w-full bg-theme-surface py-3 px-4 rounded-xl border border-theme-border outline-none font-black text-theme-text placeholder:text-theme-muted/50 focus:border-theme-primary" 
-    />
-    <p className="text-[10px] text-theme-accent font-bold italic">AES-256 encryption applied locally.</p>
-  </div>
-);

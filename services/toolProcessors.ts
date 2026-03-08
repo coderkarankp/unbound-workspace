@@ -1,4 +1,3 @@
-
 import { PDFDocument, degrees, StandardFonts, rgb } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 import JSZip from 'jszip';
@@ -12,7 +11,8 @@ export interface ProcessorParams {
 }
 
 const dataURLToUint8Array = (dataURL: string): Uint8Array => {
-  const base64 = dataURL.split(',')[1];
+  const parts = dataURL.split(',');
+  const base64 = parts.length > 1 ? parts[1] : parts[0];
   const binary = atob(base64);
   const len = binary.length;
   const bytes = new Uint8Array(len);
@@ -30,32 +30,11 @@ const hexToRgb = (hex: string) => {
   return rgb(r, g, b);
 };
 
-const PROTECT_WORKER_CODE = `
-import { QPDF } from 'https://esm.sh/@file-forge/qpdf-wasm@0.0.1';
-self.onmessage = async (e) => {
-  const { fileBuffer, password, fileName } = e.data;
-  try {
-    self.postMessage({ type: 'status', msg: 'Initializing security engine...' });
-    const qpdf = await QPDF.create();
-    const inputPath = 'input.pdf';
-    const outputPath = 'protected.pdf';
-    qpdf.fs.writeFile(inputPath, new Uint8Array(fileBuffer));
-    self.postMessage({ type: 'status', msg: 'Applying AES-256 encryption...' });
-    await qpdf.run(['--encrypt', password, password, '256', '--', inputPath, outputPath]);
-    const result = qpdf.fs.readFile(outputPath);
-    qpdf.fs.unlink(inputPath);
-    qpdf.fs.unlink(outputPath);
-    self.postMessage({ type: 'completed', bytes: result, fileName: fileName.replace('.pdf', '_protected.pdf') }, [result.buffer]);
-  } catch (error) {
-    self.postMessage({ type: 'error', error: error.message || 'Encryption failed' });
-  }
-};`;
-
 export const runToolProcessor = async (params: ProcessorParams) => {
   const { id, files, config, updateStatus, setCurrentMsg } = params;
   const results: any[] = [];
 
-  if (files.length === 0) throw new Error("No files provided for processing.");
+  if (!files || files.length === 0) throw new Error("No files provided for processing.");
 
   // Tool: Merge PDF
   if (id === 'merge-pdf') {
@@ -174,25 +153,6 @@ export const runToolProcessor = async (params: ProcessorParams) => {
           break;
         }
 
-        case 'protect-pdf': {
-          const workerBlob = new Blob([PROTECT_WORKER_CODE], { type: 'application/javascript' });
-          const workerUrl = URL.createObjectURL(workerBlob);
-          const workerResult = await new Promise<any>((resolve, reject) => {
-            const worker = new Worker(workerUrl, { type: 'module' });
-            worker.onmessage = (event) => {
-              if (event.data.type === 'status') setCurrentMsg(event.data.msg);
-              else if (event.data.type === 'completed') resolve(event.data);
-              else if (event.data.type === 'error') reject(new Error(event.data.error));
-            };
-            // Use slice(0) to ensure the buffer isn't neutered in main thread
-            worker.postMessage({ fileBuffer: originalBuffer.slice(0), password: config.password, fileName: f.file.name }, [originalBuffer.slice(0)]);
-          });
-          URL.revokeObjectURL(workerUrl);
-          res.blob = new Blob([workerResult.bytes], { type: 'application/pdf' });
-          res.name = workerResult.fileName;
-          break;
-        }
-
         case 'rotate-pdf': {
           const rotDoc = await PDFDocument.load(originalBuffer);
           const rotations = config.pageRotations || {};
@@ -224,11 +184,12 @@ export const runToolProcessor = async (params: ProcessorParams) => {
         results.push(res);
         updateStatus(f.id, 'completed', 100);
       } else {
-        throw new Error("Output file was 0-bytes or corrupted.");
+        throw new Error("Output document was empty or failed to generate.");
       }
     } catch (err: any) {
       updateStatus(f.id, 'error', 0);
-      throw new Error(`Browser failed to process ${f.file.name}: ${err.message}`);
+      console.error("Processor Error:", err);
+      throw new Error(`Browser processing failed: ${err.message || 'Unknown error'}`);
     }
   }
 

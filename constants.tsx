@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { 
-  Files, Scissors, Zap, FileImage, Lock, RotateCw, 
-  Grid, Settings, FileText
+  Files, Scissors, Zap, FileImage, RotateCw, 
+  Grid, Settings
 } from 'lucide-react';
 import { Tool } from './types';
 
@@ -29,14 +29,6 @@ export const TOOLS: Tool[] = [
     description: 'Reduce file size while optimizing for maximal quality.',
     icon: <Zap className="w-8 h-8" />,
     category: 'optimize',
-    color: 'bg-theme-primarySoft'
-  },
-  {
-    id: 'protect-pdf',
-    name: 'Protect PDF',
-    description: 'Protect PDF files with a password and secure encryption.',
-    icon: <Lock className="w-8 h-8" />,
-    category: 'security',
     color: 'bg-theme-primarySoft'
   },
   {

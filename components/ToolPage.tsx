@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Upload, File as FileIcon, Loader2, ArrowLeft, Zap, RefreshCw, AlertTriangle, Sparkles, CheckCircle2, Download, Trash2, GripVertical } from 'lucide-react';
@@ -8,10 +7,9 @@ import JSZip from 'jszip';
 import { TOOLS } from '../constants';
 import { FileState } from '../types';
 import { runToolProcessor } from '../services/toolProcessors';
-// Fix: Removed missing WatermarkPanel import as it is not exported or used.
-import { SplitPanel, SecurityPanel, MetadataPanel, RotatePanel } from './toolSettings/SettingsPanels';
+import { SplitPanel, MetadataPanel, RotatePanel } from './toolSettings/SettingsPanels';
 
-// Explicitly set the worker URL
+// Stable worker URL for PDF.js 4.x
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://esm.sh/pdfjs-dist@4.10.38/build/pdf.worker.mjs`;
 
 export const ToolPage: React.FC = () => {
@@ -79,6 +77,7 @@ export const ToolPage: React.FC = () => {
         setConfig((prev: any) => ({ ...prev, selectedPages: Array.from({length: doc.numPages}, (_,i)=>i+1)}));
       } catch (err) {
         console.error("PDF load error:", err);
+        setError("Failed to preview PDF. The file might be corrupted or protected.");
       }
     }
   };
@@ -108,29 +107,34 @@ export const ToolPage: React.FC = () => {
         downloadFile(URL.createObjectURL(content), `unbound_results.zip`);
       }
     } catch (err) {
-      setError("Download failed. Please try again.");
+      setError("Download failed. Your browser may have blocked the file generation.");
     }
   };
 
   const startPipeline = async () => {
-    if (id === 'protect-pdf' && config.password !== config.confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
     setIsProcessing(true);
     setError(null);
+    setProgressMsg("Calibrating engine...");
+    
     try {
       const results: any = await runToolProcessor({
         id: id!, files, config, 
         updateStatus: (fid, stat, prog) => setFiles(prev => prev.map(f => f.id === fid ? {...f, status: stat as any, progress: prog} : f)),
         setCurrentMsg: setProgressMsg
       });
-      if (results?.type === 'split-result') setSplitResult(results);
-      else if (Array.isArray(results)) setBatchResult(results);
+      
+      if (results?.type === 'split-result') {
+        setSplitResult(results);
+      } else if (Array.isArray(results) && results.length > 0) {
+        setBatchResult(results);
+      } else {
+        throw new Error("Conversion engine returned no data.");
+      }
     } catch (e: any) {
-      setError(e.message || "An unexpected error occurred during client-side processing.");
+      setError(e.message || "A browser error occurred during client-side processing.");
     } finally {
       setIsProcessing(false);
+      setProgressMsg("");
     }
   };
 
@@ -172,10 +176,9 @@ export const ToolPage: React.FC = () => {
                   <div className="lg:col-span-2 space-y-8">
                     {['split-pdf', 'organize-pdf'].includes(id!) && pdfDoc && <SplitPanel config={config} setConfig={setConfig} pdfDoc={pdfDoc} numPages={numPages} />}
                     {id === 'rotate-pdf' && pdfDoc && <RotatePanel config={config} setConfig={setConfig} pdfDoc={pdfDoc} numPages={numPages} />}
-                    {id === 'protect-pdf' && <SecurityPanel config={config} setConfig={setConfig} />}
                     {id === 'metadata-editor' && <MetadataPanel config={config} setConfig={setConfig} />}
                     
-                    {!['split-pdf', 'organize-pdf', 'protect-pdf', 'metadata-editor', 'rotate-pdf'].includes(id!) && (
+                    {!['split-pdf', 'organize-pdf', 'metadata-editor', 'rotate-pdf'].includes(id!) && (
                        <div className="p-10 bg-theme-bg rounded-[2.5rem] border border-theme-border text-left">
                          <h4 className="font-black text-[12px] uppercase tracking-widest text-theme-primary mb-5 flex items-center gap-2"><Sparkles className="w-4 h-4" /> Local Engine Calibrated</h4>
                          <p className="text-[16px] text-theme-muted font-semibold leading-relaxed">Processing will happen entirely within your browser for maximum privacy.</p>

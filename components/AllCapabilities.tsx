@@ -5,7 +5,7 @@ import { TOOLS } from '../constants';
 import { ToolCard } from './ToolCard';
 import { 
   ChevronLeft, ChevronRight, Search, LayoutGrid, 
-  Repeat, Zap, Shield, SlidersHorizontal 
+  Repeat, Zap, SlidersHorizontal 
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -23,7 +23,6 @@ export const AllCapabilities: React.FC = () => {
     { id: 'convert', label: 'Convert', icon: <Repeat className="w-4 h-4" /> },
     { id: 'optimize', label: 'Optimize', icon: <Zap className="w-4 h-4" /> },
     { id: 'edit', label: 'Edit', icon: <SlidersHorizontal className="w-4 h-4" /> },
-    { id: 'security', label: 'Security', icon: <Shield className="w-4 h-4" /> },
   ];
 
   const filteredTools = useMemo(() => {
